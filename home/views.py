@@ -71,7 +71,6 @@ def home(request):
                 
                 for s in new_statuses:
                     
-                    print s.created_at_in_seconds, lookback_date, s.text
                     if s.created_at_in_seconds < lookback_date:
                         
                         # break out of while loop

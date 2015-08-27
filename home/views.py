@@ -20,45 +20,61 @@ def login(request):
 @login_required
 def home(request):
     
-    status = request.REQUEST.get("status", None)
-    screen_name = request.REQUEST.get("screen_name", None)
-    if not screen_name:
-        screen_name = request.user.username
-    
     api = get_twitter(request.user)
-    if status:
-        api.PostUpdates(status)
         
-    form = ImageForm(request.POST, request.FILES)
-    print "valid: %s (%s)" % (form.is_valid(), form.errors)
-    if form.is_valid():
-        file = request.FILES['file']
+    users = ['jbulava', 'joncipriano', 'rchoi', 'niall']
+    results = {}
+    
+    for u in users:
         
-        # save to file
-        image = Image(file = file)
-        image.save()
+        statuses = []
         
-        api.UpdateImage(image.file.path)
-        
-    statuses = []  
-    max_id = None   
-    while True:
-        
-        # get latest page
-        new_statuses = api.GetUserTimeline(screen_name=screen_name, count=200, max_id=max_id)
+        max_id = 0
+        retweet_count = 0
+        favorite_count = 0
 
-        # out of statuses: done
-        if len(new_statuses) == 0:
-            break
-
-        max_id = min([s.id for s in new_statuses]) - 1
-        statuses = statuses + new_statuses
+        reply_to = 0
+        retweets_to = 0
         
-        # reached max: done
-        if len(statuses) >= 3200:
-            break
+        while True:
+            
+            # get latest page
+            new_statuses = api.GetUserTimeline(screen_name=u, count=200, max_id=max_id)
+            
+            for s in new_statuses:
+                
+                # if retweet of another, than count accordingly
+                if (s.retweeted_status):
+                    retweets_to = retweets_to + 1
+                    
+                # otherwise, my tweet, so count metrics
+                else:
+                    retweet_count = retweet_count + s.retweet_count
+                    favorite_count = favorite_count + s.favorite_count
+                    
+                    if (s.in_reply_to_screen_name):
+                        reply_to = reply_to + 1
+                        
+            # out of statuses: done
+            if len(new_statuses) == 0:
+                break
+    
+            max_id = min([s.id for s in new_statuses]) - 1
+            statuses = statuses + new_statuses
+            
+            # reached max: done
+            if len(statuses) >= 200:
+                break
+            
+        results[u] = {
+#             "statuses" : statuses,
+            "retweet_count" : retweet_count, 
+            "favorite_count" : favorite_count, 
+            "reply_to" : reply_to, 
+            "retweets_to": retweets_to 
+        }
 
-    context = {"request": request, 'statuses': statuses, 'form': form}
+    context = {"request": request, 'results': results}
     return render_to_response('home.html', context, context_instance=RequestContext(request))
 
 from django.contrib.auth import logout as auth_logout

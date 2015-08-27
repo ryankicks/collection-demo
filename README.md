@@ -1,19 +1,13 @@
-Twitter Sign In and REST APIs
+Twitter Leaderboard
 =================
 
-Sample Django App using Twitter Sign in (OAuth) and REST APIs. This is the basis for many
-types of campaigns, including:
-
-- Capture @username via Twitter Login
-- Contest/sweepstakes sign-up via Twitter
-- Tweet out a photo from a user (requires user's explicit consent)
-- Induce interests via friends & followers 
+Sample Django App that creates a leaderboard for a team's engagement and activity.
 
 <img src="screenshot.png" style="width: 70%;"/>
 
 As always, when developing on top of the Twitter platform, you must abide by the [Developer Agreement & Policy](https://dev.twitter.com/overview/terms/agreement-and-policy). 
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/twitter-signin-and-apis)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ryankicks/twitter-leaderboard)
 
 Requirements
 ============
@@ -25,12 +19,19 @@ To run this sample code, you'll need to install the following libraries:
 - south (http://south.aeracode.org/)
 - Fabric (http://www.fabfile.org/)
 
+You can install these with the following command:
+
+	pip install -r requirements.txt
+
 Getting Started
 ============
 
 - Create a Twitter App (https://apps.twitter.com/)
 
 - In the Twitter App config, ensure the Callback URL is `http://127.0.0.1:9000/complete/twitter`
+
+- Specify your database settings in app/settings.py. Be sure to uncomment the section for using a local database.
+  (The default is set to easily deploy to Heroku.) 
 
 - Specify your Twitter App tokens in app/settings.py:
 

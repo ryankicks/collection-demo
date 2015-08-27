@@ -1,4 +1,5 @@
 import base64
+import copy
 from time import *
 
 from django import forms
@@ -22,120 +23,120 @@ def login(request):
 @login_required
 def home(request):
 
-    settings = {
-        "days": int(request.REQUEST.get("days", 7)), 
+    categories = {
         "tweet_count": float(request.REQUEST.get("tweet_count", 0)),
         "retweet_count": float(request.REQUEST.get("retweet_count", .05)), 
         "favorite_count": float(request.REQUEST.get("favorite_count", 0)),
         "reply_to": float(request.REQUEST.get("reply_to", 2)),
         "retweets_to": float(request.REQUEST.get("retweets_to", 1))
     }
+    
+    settings = copy.deepcopy(categories)
+    settings["days"] = int(request.REQUEST.get("days", 7)) 
 
     lookback_date = int(time()) - settings["days"] * 24 * 60 * 60
 
-    list = List()
-    list.name = "Test"
-    list.slug = "TestSlug"
-    list.id = 218420839
-    
-    lists = []    
-    users = [u'gpj', u'joncipriano', u'jbulava', u'niall']
-    results = {
-           u'jbulava': {'retweets_to': 4, 'points': 32.15, 'statuses': [], 'reply_to': 14, 'retweet_count': 3, 'favorite_count': 24}, 
-            u'niall': {'retweets_to': 0, 'points': 2.0, 'statuses': [], 'reply_to': 1, 'retweet_count': 0, 'favorite_count': 1}, 
-            u'gpj': {'retweets_to': 0, 'points': 0.6000000000000001, 'statuses': [], 'reply_to': 0, 'retweet_count': 12, 'favorite_count': 74}, 
-            u'joncipriano': {'retweets_to': 1, 'points': 1.0, 'statuses': [], 'reply_to': 0, 'retweet_count': 0, 'favorite_count': 0}
-        }
-    chart = {"columns": [
-                    ['data1', -30, 200, 200, 400, -150, 250],
-                    ['data2', 130, 100, -100, 200, -150, 50],
-                    ['data3', -230, 200, 200, -300, 250, 250]
-                ],
+    api = get_twitter(request.user)
+    lists = api.GetLists(screen_name=request.user.username)
+ 
+    list = None
+    users = None
+    results = None
+    chart = None
+ 
+    list_id = int(request.REQUEST.get("list", 0))
+    if list_id:
+         
+        for l in lists:
+            if l.id == list_id:
+                list = l
+                break
+     
+        users = api.GetListMembers(list.id, list.slug)
+        if users:
+            users = [u.screen_name for u in users]
+  
+#         users = ['rchoi']
+  
+        results = {}
+         
+        for u in users:
+              
+            statuses = []
+              
+            max_id = 0
+            retweet_count = 0
+            favorite_count = 0
+      
+            reply_to = 0
+            retweets_to = 0
+              
+            while True:
+                  
+                # get latest page
+                new_statuses = api.GetUserTimeline(screen_name=u, count=200, max_id=max_id)
+                  
+                for s in new_statuses:
+                      
+                    if s.created_at_in_seconds < lookback_date:
+                          
+                        # break out of while loop
+                        new_statuses = []
+                        break;
+                      
+                    # if retweet of another, than count accordingly
+                    if (s.retweeted_status):
+                        retweets_to = retweets_to + 1
+                          
+                    # otherwise, my tweet, so count metrics
+                    else:
+                        retweet_count = retweet_count + s.retweet_count
+                        favorite_count = favorite_count + s.favorite_count
+                          
+                        if (s.in_reply_to_screen_name):
+                            reply_to = reply_to + 1
+                              
+                    statuses.append(s)
+                              
+                # out of statuses: done
+                if len(new_statuses) == 0:
+                    break
+          
+                max_id = min([s.id for s in new_statuses]) - 1
+                  
+                # reached max: done
+                if len(statuses) >= 3200:
+                    break
+                  
+            results[u] = {
+                "statuses" : statuses,
+                "count" : {
+                    "tweet_count" : len(statuses),
+                    "retweet_count" : retweet_count, 
+                    "favorite_count" : favorite_count, 
+                    "reply_to" : reply_to, 
+                    "retweets_to": retweets_to,
+                },
+                "points" : {
+                    "tweet_count" : settings["tweet_count"] * len(statuses),
+                    "retweet_count" : settings["retweet_count"] * retweet_count, 
+                    "favorite_count" : settings["favorite_count"] * favorite_count, 
+                    "reply_to" : settings["reply_to"] * reply_to, 
+                    "retweets_to": settings["retweets_to"] * retweets_to,
+                    "total": 0 + settings["tweet_count"] * len(statuses) + settings["retweet_count"] * retweet_count + settings["favorite_count"] * favorite_count + settings["reply_to"] * reply_to + settings["retweets_to"] * retweets_to
+                },            
+            }
+            
+        chart = {
+             "columns": [
+                [c] + [results[u]["points"][c] for u in users] for c in categories 
+             ],
              "groups" : [
-                    ['data1', 'data2']
-                ]
-             }
-    
-#     api = get_twitter(request.user)
-#     lists = api.GetLists(screen_name=request.user.username)
-# 
-#     list = None
-#     results = None
-# 
-#     list_id = int(request.REQUEST.get("list", 0))
-#     if list_id:
-#         
-#         for l in lists:
-#             if l.id == list_id:
-#                 list = l
-#                 break
-#     
-#         users = api.GetListMembers(list.id, list.slug)
-#         if users:
-#             users = [u.screen_name for u in users]
-#  
-#         results = {}
-#         
-#         for u in users:
-#              
-#             statuses = []
-#              
-#             max_id = 0
-#             retweet_count = 0
-#             favorite_count = 0
-#      
-#             reply_to = 0
-#             retweets_to = 0
-#              
-#             while True:
-#                  
-#                 # get latest page
-#                 new_statuses = api.GetUserTimeline(screen_name=u, count=200, max_id=max_id)
-#                  
-#                 for s in new_statuses:
-#                      
-#                     if s.created_at_in_seconds < lookback_date:
-#                          
-#                         # break out of while loop
-#                         new_statuses = []
-#                         break;
-#                      
-#                     # if retweet of another, than count accordingly
-#                     if (s.retweeted_status):
-#                         retweets_to = retweets_to + 1
-#                          
-#                     # otherwise, my tweet, so count metrics
-#                     else:
-#                         retweet_count = retweet_count + s.retweet_count
-#                         favorite_count = favorite_count + s.favorite_count
-#                          
-#                         if (s.in_reply_to_screen_name):
-#                             reply_to = reply_to + 1
-#                              
-#                     statuses.append(s)
-#                              
-#                 # out of statuses: done
-#                 if len(new_statuses) == 0:
-#                     break
-#          
-#                 max_id = min([s.id for s in new_statuses]) - 1
-#                  
-#                 # reached max: done
-#                 if len(statuses) >= 3200:
-#                     break
-#                  
-#             points = 0 + settings["tweet_count"] * len(statuses) + settings["retweet_count"] * retweet_count + settings["favorite_count"] * favorite_count + settings["reply_to"] * reply_to + settings["retweets_to"] * retweets_to; 
-#                  
-#             results[u] = {
-#                 "statuses" : statuses,
-#                 "retweet_count" : retweet_count, 
-#                 "favorite_count" : favorite_count, 
-#                 "reply_to" : reply_to, 
-#                 "retweets_to": retweets_to,
-#                 "points": points
-#             }
+                [c for c in categories]
+             ],
+        }
 
-    context = {"request": request, "settings": settings, "list": list, "lists": lists, "results": results, "chart" : chart}
+    context = {"request": request, "settings": settings, "users": users, "list": list, "lists": lists, "results": results, "chart" : chart}
     return render_to_response('home.html', context, context_instance=RequestContext(request))
 
 from django.contrib.auth import logout as auth_logout

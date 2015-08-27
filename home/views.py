@@ -23,10 +23,11 @@ def home(request):
 
     settings = {
         "days": int(request.REQUEST.get("days", 7)), 
+        "tweet_count": float(request.REQUEST.get("tweet_count", 0)),
         "retweet_count": float(request.REQUEST.get("retweet_count", .05)), 
-        "favorite_count": int(request.REQUEST.get("favorite_count", 0)),
-        "reply_to": int(request.REQUEST.get("reply_to", 2)),
-        "retweets_to": int(request.REQUEST.get("retweets_to", 1))
+        "favorite_count": float(request.REQUEST.get("favorite_count", 0)),
+        "reply_to": float(request.REQUEST.get("reply_to", 2)),
+        "retweets_to": float(request.REQUEST.get("retweets_to", 1))
     }
 
     lookback_date = int(time()) - settings["days"] * 24 * 60 * 60
@@ -101,7 +102,7 @@ def home(request):
                 if len(statuses) >= 3200:
                     break
                 
-            points = 0 + settings["retweet_count"] * retweet_count + settings["favorite_count"] * favorite_count + settings["reply_to"] * reply_to + settings["retweets_to"] * retweets_to; 
+            points = 0 + settings["tweet_count"] * len(statuses) + settings["retweet_count"] * retweet_count + settings["favorite_count"] * favorite_count + settings["reply_to"] * reply_to + settings["retweets_to"] * retweets_to; 
                 
             results[u] = {
                 "statuses" : statuses,

@@ -34,6 +34,7 @@ def home(request):
     
     api = get_twitter(request.user)
     lists = api.GetLists(screen_name=request.user.username)
+#     lists = []
     list_id = request.REQUEST.get("list", None)
     list_slug = None
     

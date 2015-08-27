@@ -95,6 +95,7 @@
   		<th>favorite_count</th>
   		<th>reply_to</th>
   		<th>retweets_to</th>
+  		<th>points</th>
   </tr>
   
   {% for k, v in results.items %}
@@ -104,6 +105,7 @@
   		<td>{{ v.favorite_count }}</td>
   		<td>{{ v.reply_to }}</td>
   		<td>{{ v.retweets_to }}</td>
+  		<td>{{ v.points }}</td>
     </tr>
   {% endfor %}
   

@@ -1,4 +1,5 @@
 import base64
+from time import *
 
 from django import forms
 from django.shortcuts import *
@@ -20,20 +21,15 @@ def login(request):
 @login_required
 def home(request):
 
-    days = int(request.REQUEST.get("days", 7))
-    retweet_count = float(request.REQUEST.get("retweet_count", .05))
-    favorite_count = int(request.REQUEST.get("favorite_count", 0))    
-    reply_to = int(request.REQUEST.get("reply_to", 2))
-    retweets_to = int(request.REQUEST.get("retweets_to", 1))
-    
     settings = {
-        "days": days, 
-        "retweet_count": retweet_count, 
-        "favorite_count": favorite_count,
-        "reply_to": reply_to,
-        "retweets_to": retweets_to
+        "days": int(request.REQUEST.get("days", 7)), 
+        "retweet_count": float(request.REQUEST.get("retweet_count", .05)), 
+        "favorite_count": int(request.REQUEST.get("favorite_count", 0)),
+        "reply_to": int(request.REQUEST.get("reply_to", 2)),
+        "retweets_to": int(request.REQUEST.get("retweets_to", 1))
     }
 
+    lookback_date = int(time()) - settings["days"] * 24 * 60 * 60
     results = None
     
     api = get_twitter(request.user)
@@ -50,8 +46,10 @@ def home(request):
         users = api.GetListMembers(list_id, list_slug)
         if users:
             users = [u.screen_name for u in users]
-#         users = ['jbulava', 'joncipriano', 'rchoi', 'niall']
+
         results = {}
+        
+#         users = ["rchoi"]
         
         for u in users:
             
@@ -71,6 +69,13 @@ def home(request):
                 
                 for s in new_statuses:
                     
+                    print s.created_at_in_seconds, lookback_date, s.text
+                    if s.created_at_in_seconds < lookback_date:
+                        
+                        # break out of while loop
+                        new_statuses = []
+                        break;
+                    
                     # if retweet of another, than count accordingly
                     if (s.retweeted_status):
                         retweets_to = retweets_to + 1
@@ -83,23 +88,27 @@ def home(request):
                         if (s.in_reply_to_screen_name):
                             reply_to = reply_to + 1
                             
+                    statuses.append(s)
+                            
                 # out of statuses: done
                 if len(new_statuses) == 0:
                     break
         
                 max_id = min([s.id for s in new_statuses]) - 1
-                statuses = statuses + new_statuses
                 
                 # reached max: done
-                if len(statuses) >= 200:
+                if len(statuses) >= 3200:
                     break
                 
+            points = 0 + settings["retweet_count"] * retweet_count + settings["favorite_count"] * favorite_count + settings["reply_to"] * reply_to + settings["retweets_to"] * retweets_to; 
+                
             results[u] = {
-    #             "statuses" : statuses,
+                "statuses" : statuses,
                 "retweet_count" : retweet_count, 
                 "favorite_count" : favorite_count, 
                 "reply_to" : reply_to, 
-                "retweets_to": retweets_to 
+                "retweets_to": retweets_to,
+                "points": points
             }
 
     context = {"request": request, "settings": settings, "lists": lists, "results": results}

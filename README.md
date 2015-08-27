@@ -43,11 +43,11 @@ Getting Started
     
     TWITTER_ACCESS_TOKEN_SECRET = ''
 
-- To initialize your database, run the from the `twitter-signin-and-apis` directory:
+- To initialize your database, run the from the `twitter-leaderboard` directory:
 
   `python manage.py syncdb`
 
-- To start the server, run the following from the `twitter-signin-and-apis` directory:
+- To start the server, run the following from the `twitter-leaderboard` directory:
 
   `fab start`
   
@@ -71,7 +71,7 @@ Deploying to Heroku is even easier.
 
 - Open a browser and go to the URL specified by your deploy (http://your-app-name.herokuapp.com)
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/twitterdev/twitter-signin-and-apis)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ryankicks/twitter-leaderboard)
 
 
 NOTES

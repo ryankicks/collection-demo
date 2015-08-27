@@ -19,62 +19,76 @@ def login(request):
 
 @login_required
 def home(request):
+
+    results = None
     
     api = get_twitter(request.user)
-        
-    users = ['jbulava', 'joncipriano', 'rchoi', 'niall']
-    results = {}
+    lists = api.GetLists(screen_name=request.user.username)
+    list_id = request.REQUEST.get("list", None)
+    list_slug = None
     
-    for u in users:
+    if list_id:
         
-        statuses = []
+        for l in lists:
+            if l.id == list_id:
+                list_slug = l.slug
+    
+        users = api.GetListMembers(list_id, list_slug)
+        if users:
+            users = [u.screen_name for u in users]
+#         users = ['jbulava', 'joncipriano', 'rchoi', 'niall']
+        results = {}
         
-        max_id = 0
-        retweet_count = 0
-        favorite_count = 0
-
-        reply_to = 0
-        retweets_to = 0
-        
-        while True:
+        for u in users:
             
-            # get latest page
-            new_statuses = api.GetUserTimeline(screen_name=u, count=200, max_id=max_id)
+            statuses = []
             
-            for s in new_statuses:
+            max_id = 0
+            retweet_count = 0
+            favorite_count = 0
+    
+            reply_to = 0
+            retweets_to = 0
+            
+            while True:
                 
-                # if retweet of another, than count accordingly
-                if (s.retweeted_status):
-                    retweets_to = retweets_to + 1
+                # get latest page
+                new_statuses = api.GetUserTimeline(screen_name=u, count=200, max_id=max_id)
+                
+                for s in new_statuses:
                     
-                # otherwise, my tweet, so count metrics
-                else:
-                    retweet_count = retweet_count + s.retweet_count
-                    favorite_count = favorite_count + s.favorite_count
-                    
-                    if (s.in_reply_to_screen_name):
-                        reply_to = reply_to + 1
+                    # if retweet of another, than count accordingly
+                    if (s.retweeted_status):
+                        retweets_to = retweets_to + 1
                         
-            # out of statuses: done
-            if len(new_statuses) == 0:
-                break
-    
-            max_id = min([s.id for s in new_statuses]) - 1
-            statuses = statuses + new_statuses
-            
-            # reached max: done
-            if len(statuses) >= 200:
-                break
-            
-        results[u] = {
-#             "statuses" : statuses,
-            "retweet_count" : retweet_count, 
-            "favorite_count" : favorite_count, 
-            "reply_to" : reply_to, 
-            "retweets_to": retweets_to 
-        }
+                    # otherwise, my tweet, so count metrics
+                    else:
+                        retweet_count = retweet_count + s.retweet_count
+                        favorite_count = favorite_count + s.favorite_count
+                        
+                        if (s.in_reply_to_screen_name):
+                            reply_to = reply_to + 1
+                            
+                # out of statuses: done
+                if len(new_statuses) == 0:
+                    break
+        
+                max_id = min([s.id for s in new_statuses]) - 1
+                statuses = statuses + new_statuses
+                
+                # reached max: done
+                if len(statuses) >= 200:
+                    break
+                
+            results[u] = {
+    #             "statuses" : statuses,
+                "retweet_count" : retweet_count, 
+                "favorite_count" : favorite_count, 
+                "reply_to" : reply_to, 
+                "retweets_to": retweets_to 
+            }
 
-    context = {"request": request, 'results': results}
+    context = {"request": request, "lists": lists, 'results': results}
     return render_to_response('home.html', context, context_instance=RequestContext(request))
 
 from django.contrib.auth import logout as auth_logout

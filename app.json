@@ -6,6 +6,7 @@
 	"keywords":[
 		"python",
 		"django",
+		"twitter",
 		"template",
 		"skeleton"
 	],
@@ -36,6 +37,6 @@
 		}
 	},
 	"scripts":{
-		"postdeploy":"python manage.py syncdb --noinput; python manage.py migrate --noinput"
+		"postdeploy":"python manage.py syncdb --noinput; python manage.py migrate --noinput; python manage.py collectstatic --noinput;"
 	}
 }

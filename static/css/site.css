@@ -11,7 +11,9 @@ body {
   background-color:rgba(64, 153, 255, 0.02)
 }
 
-
+th small {
+  color: #999;
+}
 
 
 

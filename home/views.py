@@ -23,6 +23,7 @@ def login(request):
 @login_required
 def home(request):
 
+    # definition of all scorable categories and their point value
     categories = {
         "tweet_count": float(request.REQUEST.get("tweet_count", 0)),
         "retweet_count": float(request.REQUEST.get("retweet_count", .05)), 
@@ -30,15 +31,16 @@ def home(request):
         "reply_to": float(request.REQUEST.get("reply_to", 2)),
         "retweets_to": float(request.REQUEST.get("retweets_to", 1))
     }
-    
+
+    # copy of categories + days setting for configuration    
     settings = copy.deepcopy(categories)
     settings["days"] = int(request.REQUEST.get("days", 7)) 
 
+    # num days to look back for scoring
     lookback_date = int(time()) - settings["days"] * 24 * 60 * 60
 
     api = get_twitter(request.user)
     lists = api.GetLists(screen_name=request.user.username)
- 
     list = None
     users = None
     results = None
@@ -108,6 +110,7 @@ def home(request):
                 if len(statuses) >= 3200:
                     break
                   
+            # engagements and scoring for each category
             results[u] = {
                 "statuses" : statuses,
                 "count" : {
@@ -127,6 +130,7 @@ def home(request):
                 },            
             }
             
+        # c3 chart data for points by category (and total)
         chart = {
              "columns": [
                 [c] + [results[u]["points"][c] for u in users] for c in categories 

@@ -3,12 +3,85 @@
 {% block content %}
 
 <form action="/home" method="post">{% csrf_token %}
-  <select name="list">
-  	{% for l in lists %}
-  		<option value="{{ l.id }}">{{ l.name }} ({{ l.description }})</option>
-  	{% endfor %}
-  </select>
-  <input type="submit" value="Calculate">
+
+<table>
+<tr>
+	<td>
+	<strong>Scope</strong>
+	</td>
+	<td>
+	</td>
+</tr>
+
+<tr>
+	<td>
+	List
+	</td>
+	<td>
+	  	<select name="list">
+	  	{% for l in lists %}
+  			<option value="{{ l.id }}">{{ l.name }} ({{ l.description }})</option>
+  		{% endfor %}
+  	  	</select>
+	</td>
+</tr>  
+<tr>
+	<td>
+	Days
+	</td>
+	<td>
+		<input type="text" name="days" value="{{ settings.days }}">
+	</td>
+</tr>
+<tr>
+	<td>
+	<strong>Points</strong>
+	</td>
+	<td>
+	</td>
+</tr>
+<tr>
+	<td>
+	retweet_count
+	</td>
+	<td>
+		<input type="text" name="retweet_count" value="{{ settings.retweet_count }}">
+	</td>
+</tr>
+<tr>
+	<td>
+	favorite_count
+	</td>
+	<td>
+		<input type="text" name="favorite_count" value="{{ settings.favorite_count }}">
+	</td>
+</tr>
+<tr>
+	<td>
+	reply_to
+	</td>
+	<td>
+		<input type="text" name="reply_to" value="{{ settings.reply_to }}">
+	</td>
+</tr>
+<tr>
+	<td>
+	retweets_to
+	</td>
+	<td>
+		<input type="text" name="retweets_to" value="{{ settings.retweets_to }}">
+	</td>
+</tr>
+<tr>
+	<td>
+	</td>
+	<td>
+		<input type="submit" value="Calculate">
+	</td>
+</tr>
+
+</table>
+  
 </form>
 
 <br>

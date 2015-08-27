@@ -20,6 +20,20 @@ def login(request):
 @login_required
 def home(request):
 
+    days = int(request.REQUEST.get("days", 7))
+    retweet_count = float(request.REQUEST.get("retweet_count", .05))
+    favorite_count = int(request.REQUEST.get("favorite_count", 0))    
+    reply_to = int(request.REQUEST.get("reply_to", 2))
+    retweets_to = int(request.REQUEST.get("retweets_to", 1))
+    
+    settings = {
+        "days": days, 
+        "retweet_count": retweet_count, 
+        "favorite_count": favorite_count,
+        "reply_to": reply_to,
+        "retweets_to": retweets_to
+    }
+
     results = None
     
     api = get_twitter(request.user)
@@ -88,7 +102,7 @@ def home(request):
                 "retweets_to": retweets_to 
             }
 
-    context = {"request": request, "lists": lists, 'results': results}
+    context = {"request": request, "settings": settings, "lists": lists, "results": results}
     return render_to_response('home.html', context, context_instance=RequestContext(request))
 
 from django.contrib.auth import logout as auth_logout

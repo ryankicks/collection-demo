@@ -2,6 +2,74 @@
 
 {% block content %}
 
+{% if list %}
+
+<h3>
+	List: {{ list.name }}{% if list.description %}: {{ list.description }} {% endif %} <small> {{results.items|length}} {% if results.items|length == 1 %} user {% else %} users {% endif %} </small>
+	
+	<a href="https://twitter.com/rchoi/lists/{{ list.slug }}" class="btn btn-default btn-sm pull-right" target="_target">Share leaderboard</a>
+	<a href="https://twitter.com/rchoi/lists/{{ list.slug }}" class="btn btn-default btn-sm pull-right" target="_target">View list</a>
+
+</h3>
+
+{% endif %}
+
+{% if chart %}
+
+<div id="chart"></div>
+
+<script language="JavaScript1.2">
+
+var chart = c3.generate({
+    data: {
+        columns: {{ chart.columns|escape|safe }},
+        type: 'bar',
+        groups: {{ chart.groups|escape|safe }}
+    },
+    grid: {
+        y: {
+            lines: [{value:0}]
+        }
+    }
+});
+
+</script>
+
+{% endif %}
+
+{% if results %}
+  
+<h3> Details </h3>
+
+<table class="table table-striped">
+  <tr>
+  		<th>user</th>
+  		<th>tweets</th>
+  		<th>retweet_count</th>
+  		<th>favorite_count</th>
+  		<th>reply_to</th>
+  		<th>retweets_to</th>
+  		<th>points</th>
+  </tr>
+  
+  {% for k, v in results.items %}
+  	<tr>
+  		<td><a href="https://twitter.com/{{ k }}" target="_target">{{ k }}</a></td>
+  		<td>{{ v.statuses|length }}</td>
+  		<td>{{ v.retweet_count }}</td>
+  		<td>{{ v.favorite_count }}</td>
+  		<td>{{ v.reply_to }}</td>
+  		<td>{{ v.retweets_to }}</td>
+  		<td>{{ v.points }}</td>
+    </tr>
+  {% endfor %}
+  
+</table>
+  
+{% endif %}
+
+<h3> Criteria </h3>
+
 <form class="form-horizontal" action="/home" method="post">{% csrf_token %}
 
 <div class="row">
@@ -89,34 +157,5 @@
 </form>
 
 <br>
-
-{% if results %}
-  
-  <table class="table table-striped">
-  <tr>
-  		<th>user</th>
-  		<th>tweets</th>
-  		<th>retweet_count</th>
-  		<th>favorite_count</th>
-  		<th>reply_to</th>
-  		<th>retweets_to</th>
-  		<th>points</th>
-  </tr>
-  
-  {% for k, v in results.items %}
-  	<tr>
-  		<td><a href="https://twitter.com/{{ k }}" target="_target">{{ k }}</a></td>
-  		<td>{{ v.statuses|length }}</td>
-  		<td>{{ v.retweet_count }}</td>
-  		<td>{{ v.favorite_count }}</td>
-  		<td>{{ v.reply_to }}</td>
-  		<td>{{ v.retweets_to }}</td>
-  		<td>{{ v.points }}</td>
-    </tr>
-  {% endfor %}
-  
-  </table>
-  
-{% endif %}
 
 {% endblock %}

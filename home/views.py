@@ -30,7 +30,9 @@ def home(request):
 
     # copy of categories + days setting for configuration    
     settings = copy.deepcopy(categories)
-    settings["days"] = int(request.REQUEST.get("days", 7)) 
+    settings["days"] = int(request.REQUEST.get("days", 7))
+    settings["refresh"] = int(request.REQUEST.get("refresh", 0))
+    settings["refresh_default"] = 5 * 60 * 1000 
 
     # num days to look back for scoring
     lookback_date = int(time()) - settings["days"] * 24 * 60 * 60

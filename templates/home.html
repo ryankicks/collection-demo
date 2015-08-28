@@ -2,24 +2,17 @@
 
 {% block content %}
 
-{% if list %}
-
-<h3>
-	{{ list.name }}{% if list.description %}: {{ list.description }} {% endif %} <small> {{results.items|length}} {% if results.items|length == 1 %} member {% else %} members {% endif %} </small>
-	
-	<button class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#myModal">Share leaderboard</button>
-	<div class="pull-right" style="width: 8px;">&nbsp;</div>
-	<a href="https://twitter.com/{{list.user.screen_name}}/lists/{{ list.slug }}" class="btn btn-default btn-sm pull-right" target="_target">View list</a>
-</h3>
-
-{% endif %}
-
-{% if chart %}
-
-<div id="chart"></div>
-
 <script language="JavaScript1.2">
 
+$(document).ready(function(){
+
+Page.init();
+	
+{% if settings.refresh %}
+Page.setRefresh({{settings.refresh}});
+{% endif %}
+
+{% if users and chart %}
 var users = [{% for u in users %} "{{ u.screen_name }}", {% endfor %}];
 
 var chart = c3.generate({
@@ -45,8 +38,27 @@ var chart = c3.generate({
         }
     }
 });
+{% endif %}
+	
+});
 
 </script>
+
+{% if list %}
+
+<h3>
+	{{ list.name }}{% if list.description %}: {{ list.description }} {% endif %} <small> {{results.items|length}} {% if results.items|length == 1 %} member {% else %} members {% endif %} </small>
+	
+	<button class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#myModal">Share leaderboard</button>
+	<div class="pull-right" style="width: 8px;">&nbsp;</div>
+	<a href="https://twitter.com/{{list.user.screen_name}}/lists/{{ list.slug }}" class="btn btn-default btn-sm pull-right" target="_target">View list</a>
+</h3>
+
+{% endif %}
+
+{% if chart %}
+
+<div id="chart"></div>
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
@@ -56,15 +68,20 @@ var chart = c3.generate({
         <h4 class="modal-title" id="myModalLabel">Share leaderboard</h4>
       </div>
       <div class="modal-body">
-        Copy and paste the following URL to share with friends: 
+        <p>Copy and paste the following URL to share:</p> 
 
-<form class="form-horizontal">
-  <div class="form-group">
-    <div class="col-sm-12">
-      <input type="email" class="form-control" id="inputEmail3" placeholder="Email" value="{{request.build_absolute_uri}}">
-    </div>
-  </div>
-</form>
+		<form class="form-horizontal">
+  			<div class="row">
+    			<div class="col-sm-12">
+      				<input type="email" class="form-control" id="share_url" placeholder="Email" value="{{request.build_absolute_uri}}">
+    			</div>
+  			</div>
+  			<div class="checkbox">
+    		<label>
+      			<input id="refresh" value="{{settings.refresh_default}}" type="checkbox"> Refresh every 5 minutes
+    		</label>
+  			</div>
+		</form>
 
       </div>
       <div class="modal-footer">

@@ -8,13 +8,9 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
 
 from social.apps.django_app.default.models import UserSocialAuth
+
 import twitter
 from twitter import *
-
-from home.models import Image
-
-class ImageForm(forms.Form):
-    file = forms.FileField()
 
 def login(request):
     context = {"request": request}
@@ -41,6 +37,7 @@ def home(request):
 
     api = get_twitter(request.user)
     list = None
+    lists = None
     users = None
     results = None
     chart = None
@@ -132,7 +129,8 @@ def home(request):
         }
 
     # lists for leaderboard generation
-    lists = api.GetLists(screen_name=request.user.username)
+    if not list or list.user.id == request.user.id:
+        lists = api.GetLists(screen_name=request.user.username)
 
     context = {"request": request, "settings": settings, "users": users, "list": list, "lists": lists, "results": results, "chart" : chart}
     return render_to_response('home.html', context, context_instance=RequestContext(request))

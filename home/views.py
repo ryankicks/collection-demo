@@ -43,8 +43,9 @@ def home(request):
     chart = None
  
     list_id = int(request.REQUEST.get("list", 0))
+    
     if list_id:
-         
+
         list = api.GetList(list_id, None)
         users = api.GetListMembers(list.id, list.slug)
   
@@ -129,8 +130,15 @@ def home(request):
         }
 
     # lists for leaderboard generation
-    if not list or list.user.id == request.user.id:
+    if not list or list.user.screen_name == request.user.username:
+        
         lists = api.GetLists(screen_name=request.user.username)
+        if not lists:
+            
+            list_temp = List()
+            list_temp.id = ""
+            list_temp.name = "-- Please create a list --"
+            lists = [list_temp]
 
     context = {"request": request, "settings": settings, "users": users, "list": list, "lists": lists, "results": results, "chart" : chart}
     return render_to_response('home.html', context, context_instance=RequestContext(request))

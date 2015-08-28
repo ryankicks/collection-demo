@@ -21,7 +21,7 @@
 
 <script language="JavaScript1.2">
 
-var users = [{% for u in users %} "{{ u }}", {% endfor %}];
+var users = [{% for k, v in results.items %} "{{ k }}", {% endfor %}];
 
 var chart = c3.generate({
     data: {
@@ -68,7 +68,14 @@ var chart = c3.generate({
   
   {% for k, v in results.items %}
   	<tr>
-  		<td><a href="https://twitter.com/{{ k }}" target="_target">{{ k }}</a></td>
+  		<td>
+  			{% for u in users %}
+  				{% if u.screen_name == k %}
+  					<img src="{{ u.profile_image_url }}" class="profile">
+  				{% endif %}
+  			{% endfor %}
+  			<a href="https://twitter.com/{{ k }}" target="_target">{{ k }}</a>
+  		</td>
   		<td>{{ v.count.tweet_count }}</td>
   		<td>{{ v.count.retweet_count }}</td>
   		<td>{{ v.count.favorite_count }}</td>

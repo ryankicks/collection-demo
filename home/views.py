@@ -11,7 +11,7 @@ from social.apps.django_app.default.models import UserSocialAuth
 import twitter
 from twitter import *
 
-from home.models import Image 
+from home.models import Image
 
 class ImageForm(forms.Form):
     file = forms.FileField()
@@ -40,7 +40,6 @@ def home(request):
     lookback_date = int(time()) - settings["days"] * 24 * 60 * 60
 
     api = get_twitter(request.user)
-    lists = api.GetLists(screen_name=request.user.username)
     list = None
     users = None
     results = None
@@ -49,16 +48,8 @@ def home(request):
     list_id = int(request.REQUEST.get("list", 0))
     if list_id:
          
-        for l in lists:
-            if l.id == list_id:
-                list = l
-                break
-     
+        list = api.GetList(list_id, None)
         users = api.GetListMembers(list.id, list.slug)
-        if users:
-            users = [u.screen_name for u in users]
-  
-#         users = ['rchoi']
   
         results = {}
          
@@ -111,7 +102,7 @@ def home(request):
                     break
                   
             # engagements and scoring for each category
-            results[u] = {
+            results[u.screen_name] = {
                 "statuses" : statuses,
                 "count" : {
                     "tweet_count" : len(statuses),
@@ -133,12 +124,15 @@ def home(request):
         # c3 chart data for points by category (and total)
         chart = {
              "columns": [
-                [c] + [results[u]["points"][c] for u in users] for c in categories 
+                [c] + [results[u.screen_name]["points"][c] for u in users] for c in categories 
              ],
              "groups" : [
                 [c for c in categories]
              ],
         }
+
+    # lists for leaderboard generation
+    lists = api.GetLists(screen_name=request.user.username)
 
     context = {"request": request, "settings": settings, "users": users, "list": list, "lists": lists, "results": results, "chart" : chart}
     return render_to_response('home.html', context, context_instance=RequestContext(request))

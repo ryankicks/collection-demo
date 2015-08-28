@@ -65,7 +65,7 @@ def home(request):
             while True:
                   
                 # get latest page
-                new_statuses = api.GetUserTimeline(screen_name=u, count=200, max_id=max_id)
+                new_statuses = api.GetUserTimeline(screen_name=u.screen_name, count=200, max_id=max_id)
                   
                 for s in new_statuses:
                       
@@ -74,9 +74,11 @@ def home(request):
                         # break out of while loop
                         new_statuses = []
                         break;
+                    
+#                     print s.id, s.text, s.retweeted_status, s.retweet_count, s.favorite_count
                       
                     # if retweet of another, than count accordingly
-                    if (s.retweeted_status):
+                    if s.retweeted_status:
                         retweets_to = retweets_to + 1
                           
                     # otherwise, my tweet, so count metrics
@@ -84,7 +86,7 @@ def home(request):
                         retweet_count = retweet_count + s.retweet_count
                         favorite_count = favorite_count + s.favorite_count
                           
-                        if (s.in_reply_to_screen_name):
+                        if s.in_reply_to_screen_name:
                             reply_to = reply_to + 1
                               
                     statuses.append(s)

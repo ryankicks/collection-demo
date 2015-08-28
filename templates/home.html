@@ -20,7 +20,7 @@
 
 <script language="JavaScript1.2">
 
-var users = [{% for k, v in results.items %} "{{ k }}", {% endfor %}];
+var users = [{% for u in users %} "{{ u.screen_name }}", {% endfor %}];
 
 var chart = c3.generate({
     data: {

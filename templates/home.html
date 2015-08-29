@@ -154,7 +154,7 @@ var chart = c3.generate({
     <div class="col-sm-8">
 	  	<select class="form-control" name="list">
 	  	{% for l in lists %}
-  			<option value="{{ l.id }}">{{ l.name }}{% if l.description %}: {{ l.description }}{% endif %} {% if l.member_count %}({{l.member_count}}){% endif %}</option>
+  			<option value="{{ l.id }}" {% if l.id == list.id %}CHECKED{% endif %}>{{ l.name }}{% if l.description %}: {{ l.description }}{% endif %} {% if l.member_count %}({{l.member_count}}){% endif %}</option>
   		{% endfor %}
   	  	</select>
     </div>

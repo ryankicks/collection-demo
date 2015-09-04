@@ -3,6 +3,7 @@ dj-database-url==0.3.0
 gunicorn==19.1.1
 psycopg2==2.5.1
 python-social-auth
+pytz==2013.8
 # python-twitter==2.2
 -e git://github.com/ryankicks/python-twitter.git@d023838519f9c3bd40f042443f23c4c41176a129#egg=python-twitter
 South==1.0.2

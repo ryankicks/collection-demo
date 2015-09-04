@@ -6,7 +6,8 @@ from time import *
 from django import forms
 from django.shortcuts import *
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.conf import settings
+from django.views.decorators.http import condition
+from django.views.decorators.csrf import csrf_exempt
 
 from social.apps.django_app.default.models import UserSocialAuth
 
@@ -196,6 +197,46 @@ def home(request):
     }
     return render_to_response('home.html', context, context_instance=RequestContext(request))
 
+@login_required
+@csrf_exempt
+def settings (request):
+    
+    from timezones import zones
+
+    user = request.user
+    access_tokens = Twitter.get_access_tokens(user)
+    success_msg = ""
+
+    if request.method == 'POST':
+
+        profile = user.profile
+        
+        profile.twitter_id = access_tokens.get('user_id', None)
+        profile.twitter_access_token = access_tokens.get('oauth_token', None)
+        profile.twitter_access_token_secret = access_tokens.get('oauth_token_secret', None)
+        profile.save()
+
+        profile.timezone = request.REQUEST.get("timezone", None)
+        profile.save()
+        
+        success_msg = "Saved."
+        
+    tz_list = []
+    for tz_offset, tz_name, tz_formatted in zones.get_timezones(only_us=False):
+        tz_list.append([tz_name, tz_formatted])
+
+    context = {
+       "request": request, 
+        'timezones': tz_list,
+        'twitter_id': user.profile.twitter_id,
+        'twitter_access_tokens': access_tokens
+    }
+    
+    if success_msg:
+        context["message"] = success_msg
+
+    return render_to_response('settings.html', context, context_instance=RequestContext(request))
+
 from django.contrib.auth import logout as auth_logout
 def logout(request):
     """Logs out user"""
@@ -203,6 +244,8 @@ def logout(request):
     return HttpResponseRedirect('/')
 
 def get_twitter(user):
+
+    from django.conf import settings
 
     consumer_key = settings.SOCIAL_AUTH_TWITTER_KEY  
     consumer_secret = settings.SOCIAL_AUTH_TWITTER_SECRET 

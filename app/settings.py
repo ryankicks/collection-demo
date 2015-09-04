@@ -39,7 +39,9 @@ INSTALLED_APPS = (
     'social.apps.django_app.default',
     'south',
     'app',
-    'home'
+    'home',
+    'services',
+    'tags',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -49,7 +51,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'services.middleware.TimezoneMiddleware',
 )
+
+AUTH_PROFILE_MODULE = "services.UserProfile"
 
 AUTHENTICATION_BACKENDS = (
     'social.backends.twitter.TwitterOAuth',

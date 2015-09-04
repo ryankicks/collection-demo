@@ -151,7 +151,7 @@ var chart = c3.generate({
   </div>
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">Participant List <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to calculate in leaderboard"></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">Participant List <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to include in leaderboard"></i></label>
     <div class="col-sm-8">
 	  	<select class="form-control" name="list">
 	  	{% for l in lists %}
@@ -162,7 +162,7 @@ var chart = c3.generate({
   </div>
   
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">Exclude List <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to exclude in activity (reply_to and retweet_to) in leaderboard"></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">Exclude List <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to exclude from reply_to and retweet_of activity"></i></label>
     <div class="col-sm-8">
 	  	<select class="form-control" name="list_exclude">
 	  	<option value="">-- Select one --</option>
@@ -237,14 +237,14 @@ var chart = c3.generate({
   </div>
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">reply_to <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Number of replies a user has made"></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">reply_to <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Number of replies a user has tweeted"></i></label>
     <div class="col-sm-8">
     	<input class="form-control" type="text" name="reply_to" value="{{ settings.reply_to }}">
     </div>
   </div>
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">retweets_of  <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Number of retweets a user has made"></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">retweets_of  <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Number of tweets a user has retweeted"></i></label>
     <div class="col-sm-8">
     	<input class="form-control" type="text" name="retweets_of" value="{{ settings.retweets_of }}">
     </div>

@@ -10,6 +10,8 @@ from calendar import timegm
 from django.conf import settings
 from django.utils import timezone
 
+from social.apps.django_app.default.models import UserSocialAuth
+
 EPOCH = 1970
 _EPOCH_ORD = date(EPOCH, 1, 1).toordinal()
 
@@ -47,3 +49,10 @@ class Tz:
         
         return mktime(dt_utc.timetuple())
     
+class Twitter:
+    
+    @staticmethod
+    def get_access_tokens(user):
+        usa = UserSocialAuth.objects.get(user=user, provider='twitter')
+        access_token = usa.extra_data['access_token']
+        return access_token

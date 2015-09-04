@@ -28,7 +28,7 @@ def home(request):
         "retweet_count": float(request.REQUEST.get("retweet_count", .05)), 
         "favorite_count": float(request.REQUEST.get("favorite_count", 0)),
         "reply_to": float(request.REQUEST.get("reply_to", 2)),
-        "retweets_to": float(request.REQUEST.get("retweets_to", 1))
+        "retweets_of": float(request.REQUEST.get("retweets_of", 1))
     }
 
     # copy of categories + days setting for configuration    
@@ -37,6 +37,7 @@ def home(request):
     settings["refresh"] = int(request.REQUEST.get("refresh", 0))
     settings["refresh_default"] = 5 * 60 * 1000 
 
+    # determine start/end dates
     end_date = request.REQUEST.get("end_date", None)
     if end_date: 
         end_date = Tz.convert_to_utc(end_date, date_format="%Y-%m-%d %H:%M")
@@ -48,6 +49,13 @@ def home(request):
         start_date = Tz.convert_to_utc(start_date, date_format="%Y-%m-%d %H:%M")
     else:
         start_date = end_date - timedelta(days=settings["days"])
+        
+    settings["start_date"] = start_date 
+    settings["end_date"] = end_date 
+    
+    # calculate seconds for better performance
+    end_date_seconds = Tz.convert_to_seconds(end_date)
+    start_date_seconds = Tz.convert_to_seconds(start_date)
         
     api = get_twitter(request.user)
     list = None
@@ -88,7 +96,7 @@ def home(request):
             favorite_count = 0
       
             reply_to = 0
-            retweets_to = 0
+            retweets_of = 0
               
             while True:
                   
@@ -97,11 +105,11 @@ def home(request):
                   
                 for s in new_statuses:
                       
-                    if s.created_at_in_seconds > Tz.convert_to_seconds(end_date):
+                    if s.created_at_in_seconds > end_date_seconds:
                         
                         continue
                       
-                    if s.created_at_in_seconds < Tz.convert_to_seconds(start_date):
+                    if s.created_at_in_seconds < start_date_seconds:
                           
                         # break out of while loop
                         new_statuses = []
@@ -111,7 +119,7 @@ def home(request):
 
                     # if retweet of another, than count accordingly
                     if s.retweeted_status and s.user.screen_name not in users_exclude:
-                        retweets_to = retweets_to + 1
+                        retweets_of = retweets_of + 1
                           
                     # otherwise, my tweet, so count metrics
                     else:
@@ -141,15 +149,15 @@ def home(request):
                     "retweet_count" : retweet_count, 
                     "favorite_count" : favorite_count, 
                     "reply_to" : reply_to, 
-                    "retweets_to": retweets_to,
+                    "retweets_of": retweets_of,
                 },
                 "points" : {
                     "tweet_count" : settings["tweet_count"] * len(statuses),
                     "retweet_count" : settings["retweet_count"] * retweet_count, 
                     "favorite_count" : settings["favorite_count"] * favorite_count, 
                     "reply_to" : settings["reply_to"] * reply_to, 
-                    "retweets_to": settings["retweets_to"] * retweets_to,
-                    "total": 0 + settings["tweet_count"] * len(statuses) + settings["retweet_count"] * retweet_count + settings["favorite_count"] * favorite_count + settings["reply_to"] * reply_to + settings["retweets_to"] * retweets_to
+                    "retweets_of": settings["retweets_of"] * retweets_of,
+                    "total": 0 + settings["tweet_count"] * len(statuses) + settings["retweet_count"] * retweet_count + settings["favorite_count"] * favorite_count + settings["reply_to"] * reply_to + settings["retweets_of"] * retweets_of
                 },            
             }
             
@@ -178,8 +186,6 @@ def home(request):
     context = {
        "request": request, 
        "settings": settings,
-       "start_date": start_date, 
-       "end_date": end_date, 
        "users": users, 
        "list": list, 
        "lists": lists, 

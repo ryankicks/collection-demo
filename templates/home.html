@@ -105,7 +105,7 @@ var chart = c3.generate({
   		<th>retweet_count <small>{{settings.retweet_count}}</small></th>
   		<th>favorite_count <small>{{settings.favorite_count}}</small></th>
   		<th>reply_to <small>{{settings.reply_to}}</small></th>
-  		<th>retweets_to <small>{{settings.retweets_to}}</small></th>
+  		<th>retweets_of <small>{{settings.retweets_of}}</small></th>
   		<th>points</th>
   </tr>
   
@@ -123,7 +123,7 @@ var chart = c3.generate({
   		<td>{{ v.count.retweet_count }}</td>
   		<td>{{ v.count.favorite_count }}</td>
   		<td>{{ v.count.reply_to }}</td>
-  		<td>{{ v.count.retweets_to }}</td>
+  		<td>{{ v.count.retweets_of }}</td>
   		<td>{{ v.points.total }}</td>
     </tr>
   {% endfor %}
@@ -179,7 +179,7 @@ var chart = c3.generate({
 
             <div class="form-group form-datetimepicker">
                 <div class='input-group date datetimepicker'>
-                    <input name="start_date" value="{{start_date|date:"Y-m-d H:i" }}" type='text' class="form-control">
+                    <input name="start_date" value="{{settings.start_date|date:"Y-m-d H:i" }}" type='text' class="form-control">
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -195,7 +195,7 @@ var chart = c3.generate({
 
             <div class="form-group form-datetimepicker">
                 <div class='input-group date datetimepicker'>
-                    <input name="end_date" value="{{end_date|date:"Y-m-d H:i" }}" type='text' class="form-control">
+                    <input name="end_date" value="{{settings.end_date|date:"Y-m-d H:i" }}" type='text' class="form-control">
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -244,9 +244,9 @@ var chart = c3.generate({
   </div>
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">retweets_to  <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Number of retweets a user has made"></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">retweets_of  <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Number of retweets a user has made"></i></label>
     <div class="col-sm-8">
-    	<input class="form-control" type="text" name="retweets_to" value="{{ settings.retweets_to }}">
+    	<input class="form-control" type="text" name="retweets_of" value="{{ settings.retweets_of }}">
     </div>
   </div>
 

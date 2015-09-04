@@ -26,4 +26,7 @@ th small {
   margin-bottom: 0px;
 }
 
-
+.panel-default>.panel-heading {
+    background-color: rgba(64, 153, 255, 0.02);
+    color: #2a6496;
+}

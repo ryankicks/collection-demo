@@ -54,6 +54,8 @@ def home(request):
     settings["start_date"] = start_date 
     settings["end_date"] = end_date 
     
+#     print start_date, end_date
+    
     # calculate seconds for better performance
     end_date_seconds = Tz.convert_to_seconds(end_date)
     start_date_seconds = Tz.convert_to_seconds(start_date)

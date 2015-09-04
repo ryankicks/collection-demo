@@ -69,6 +69,10 @@ Deploying to Heroku is even easier.
 	
 - After deploying, in the Twitter App config, ensure the Callback URL is `http://your-app-name.herokuapp.com/complete/twitter`
 
+- To sync the database, use the `heroku` CLI and run the following:
+
+	`heroku run python manage.py migrate --app wh-leaderboard`
+
 - Open a browser and go to the URL specified by your deploy (http://your-app-name.herokuapp.com)
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ryankicks/twitter-leaderboard)

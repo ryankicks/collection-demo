@@ -30,7 +30,8 @@ var chart = c3.generate({
                     return users[x];
                 }
             }
-        }
+        },
+        rotated: true
     },
     grid: {
         y: {
@@ -173,7 +174,7 @@ var chart = c3.generate({
   </div>  
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">Start Date</label>
+    <label for="inputEmail3" class="col-sm-3 control-label">From</label>
     <div class="col-sm-8">
 
             <div class="form-group form-datetimepicker">
@@ -189,7 +190,7 @@ var chart = c3.generate({
   </div>
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">End Date</label>
+    <label for="inputEmail3" class="col-sm-3 control-label">To</label>
     <div class="col-sm-8">
 
             <div class="form-group form-datetimepicker">

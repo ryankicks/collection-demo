@@ -77,7 +77,6 @@ def home(request):
             users_exclude = api.GetListMembers(list_exclude.id, list_exclude.slug)
             users_exclude = [u.screen_name for u in users_exclude]
   
-        print users_exclude
         results = {}
          
         for u in users:
@@ -108,7 +107,7 @@ def home(request):
                         new_statuses = []
                         break;
                     
-                    print s.created_at_in_seconds, Tz.convert_to_seconds(start_date), Tz.convert_to_seconds(end_date), s.id, s.text, s.retweet_count, s.favorite_count
+#                     print s.created_at_in_seconds, Tz.convert_to_seconds(start_date), Tz.convert_to_seconds(end_date), s.id, s.text, s.retweet_count, s.favorite_count
 
                     # if retweet of another, than count accordingly
                     if s.retweeted_status and s.user.screen_name not in users_exclude:

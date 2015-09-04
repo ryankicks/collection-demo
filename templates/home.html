@@ -150,20 +150,57 @@ var chart = c3.generate({
   </div>
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">List</label>
+    <label for="inputEmail3" class="col-sm-3 control-label">Participant List <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to calculate in leaderboard"></i></label>
     <div class="col-sm-8">
 	  	<select class="form-control" name="list">
 	  	{% for l in lists %}
-  			<option value="{{ l.id }}" {% if l.id == list.id %}CHECKED{% endif %}>{{ l.name }}{% if l.description %}: {{ l.description }}{% endif %} {% if l.member_count %}({{l.member_count}}){% endif %}</option>
+  			<option value="{{ l.id }}" {% if l.id == list.id %}SELECTED{% endif %}>{{ l.name }}{% if l.description %}: {{ l.description }}{% endif %} {% if l.member_count %}({{l.member_count}}){% endif %}</option>
   		{% endfor %}
   	  	</select>
     </div>
   </div>
+  
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-3 control-label">Exclude List <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to exclude in activity (reply_to and retweet_to) in leaderboard"></i></label>
+    <div class="col-sm-8">
+	  	<select class="form-control" name="list_exclude">
+	  	<option value="">-- Select one --</option>
+	  	{% for l in lists_exclude %}
+  			<option value="{{ l.id }}" {% if l.id == list_exclude.id %}SELECTED{% endif %}>{{ l.name }}{% if l.description %}: {{ l.description }}{% endif %} {% if l.member_count %}({{l.member_count}}){% endif %}</option>
+  		{% endfor %}
+  	  	</select>
+    </div>
+  </div>  
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">Days</label>
+    <label for="inputEmail3" class="col-sm-3 control-label">Start Date</label>
     <div class="col-sm-8">
-    	<input class="form-control" type="text" name="days" value="{{ settings.days }}">
+
+            <div class="form-group form-datetimepicker">
+                <div class='input-group date datetimepicker'>
+                    <input name="start_date" value="{{start_date|date:"Y-m-d H:i" }}" type='text' class="form-control">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-3 control-label">End Date</label>
+    <div class="col-sm-8">
+
+            <div class="form-group form-datetimepicker">
+                <div class='input-group date datetimepicker'>
+                    <input name="end_date" value="{{end_date|date:"Y-m-d H:i" }}" type='text' class="form-control">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+
     </div>
   </div>
   
@@ -178,35 +215,35 @@ var chart = c3.generate({
 
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">tweet_count</label>
+    <label for="inputEmail3" class="col-sm-3 control-label"> tweet_count <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Number of tweets from user"></i></label>
     <div class="col-sm-8">
     	<input class="form-control" type="text" name="tweet_count" value="{{ settings.tweet_count }}">
     </div>
   </div>
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">retweet_count</label>
+    <label for="inputEmail3" class="col-sm-3 control-label">retweet_count <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Number of retweets user has received"></i></label>
     <div class="col-sm-8">
     	<input class="form-control" type="text" name="retweet_count" value="{{ settings.retweet_count }}">
     </div>
   </div>
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">favorite_count</label>
+    <label for="inputEmail3" class="col-sm-3 control-label">favorite_count <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Number of favorites user has received"></i></label>
     <div class="col-sm-8">
     	<input class="form-control" type="text" name="favorite_count" value="{{ settings.favorite_count }}">
     </div>
   </div>
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">reply_to</label>
+    <label for="inputEmail3" class="col-sm-3 control-label">reply_to <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Number of replies a user has made"></i></label>
     <div class="col-sm-8">
     	<input class="form-control" type="text" name="reply_to" value="{{ settings.reply_to }}">
     </div>
   </div>
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">retweets_to</label>
+    <label for="inputEmail3" class="col-sm-3 control-label">retweets_to  <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Number of retweets a user has made"></i></label>
     <div class="col-sm-8">
     	<input class="form-control" type="text" name="retweets_to" value="{{ settings.retweets_to }}">
     </div>

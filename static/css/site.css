@@ -20,4 +20,10 @@ th small {
   margin-right: 4px;
 }
 
+.form-datetimepicker {
+  padding-right: 15px; 
+  padding-left: 15px;
+  margin-bottom: 0px;
+}
+
 

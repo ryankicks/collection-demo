@@ -1,5 +1,6 @@
 import base64
 import copy
+import pytz
 from time import *
 
 from django import forms
@@ -8,6 +9,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
 
 from social.apps.django_app.default.models import UserSocialAuth
+
+from home.utils import *
 
 import twitter
 from twitter import *
@@ -34,23 +37,47 @@ def home(request):
     settings["refresh"] = int(request.REQUEST.get("refresh", 0))
     settings["refresh_default"] = 5 * 60 * 1000 
 
-    # num days to look back for scoring
-    lookback_date = int(time()) - settings["days"] * 24 * 60 * 60
-
+    end_date = request.REQUEST.get("end_date", None)
+    if end_date: 
+        end_date = Tz.convert_to_utc(end_date, date_format="%Y-%m-%d %H:%M")
+    else:
+        end_date = datetime.now(pytz.utc)
+    
+    start_date = request.REQUEST.get("start_date", None)
+    if start_date:
+        start_date = Tz.convert_to_utc(start_date, date_format="%Y-%m-%d %H:%M")
+    else:
+        start_date = end_date - timedelta(days=settings["days"])
+        
     api = get_twitter(request.user)
     list = None
     lists = None
+    list_exclude = None
+    lists_exclude = None
     users = None
     results = None
     chart = None
  
     list_id = int(request.REQUEST.get("list", 0))
+
+    list_exclude_id = request.REQUEST.get("list_exclude", 0)
+    if list_exclude_id:
+        list_exclude_id = int(list_exclude_id)
+    else:
+        list_exclude_id = None
     
     if list_id:
 
         list = api.GetList(list_id, None)
         users = api.GetListMembers(list.id, list.slug)
+
+        users_exclude = []
+        if list_exclude_id:        
+            list_exclude = api.GetList(list_exclude_id, None)
+            users_exclude = api.GetListMembers(list_exclude.id, list_exclude.slug)
+            users_exclude = [u.screen_name for u in users_exclude]
   
+        print users_exclude
         results = {}
          
         for u in users:
@@ -71,16 +98,20 @@ def home(request):
                   
                 for s in new_statuses:
                       
-                    if s.created_at_in_seconds < lookback_date:
+                    if s.created_at_in_seconds > Tz.convert_to_seconds(end_date):
+                        
+                        continue
+                      
+                    if s.created_at_in_seconds < Tz.convert_to_seconds(start_date):
                           
                         # break out of while loop
                         new_statuses = []
                         break;
                     
-#                     print s.id, s.text, s.retweeted_status, s.retweet_count, s.favorite_count
-                      
+                    print s.created_at_in_seconds, Tz.convert_to_seconds(start_date), Tz.convert_to_seconds(end_date), s.id, s.text, s.retweet_count, s.favorite_count
+
                     # if retweet of another, than count accordingly
-                    if s.retweeted_status:
+                    if s.retweeted_status and s.user.screen_name not in users_exclude:
                         retweets_to = retweets_to + 1
                           
                     # otherwise, my tweet, so count metrics
@@ -88,7 +119,7 @@ def home(request):
                         retweet_count = retweet_count + s.retweet_count
                         favorite_count = favorite_count + s.favorite_count
                           
-                        if s.in_reply_to_screen_name:
+                        if s.in_reply_to_screen_name and s.in_reply_to_screen_name not in users_exclude:
                             reply_to = reply_to + 1
                               
                     statuses.append(s)
@@ -137,6 +168,7 @@ def home(request):
     if not list or list.user.screen_name == request.user.username:
         
         lists = api.GetLists(screen_name=request.user.username)
+    
         if not lists:
             
             list_temp = List()
@@ -144,7 +176,19 @@ def home(request):
             list_temp.name = "-- Please create a list --"
             lists = [list_temp]
 
-    context = {"request": request, "settings": settings, "users": users, "list": list, "lists": lists, "results": results, "chart" : chart}
+    context = {
+       "request": request, 
+       "settings": settings,
+       "start_date": start_date, 
+       "end_date": end_date, 
+       "users": users, 
+       "list": list, 
+       "lists": lists, 
+       "list_exclude": list_exclude, 
+       "lists_exclude": lists, 
+       "results": results, 
+       "chart" : chart
+    }
     return render_to_response('home.html', context, context_instance=RequestContext(request))
 
 from django.contrib.auth import logout as auth_logout

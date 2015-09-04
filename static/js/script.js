@@ -2,6 +2,13 @@ var Page = {
 
 	init : function(){
 		
+		$('.help').popover()
+		
+		$('.datetimepicker').datetimepicker({
+	      	format: 'YYYY-MM-DD HH:mm',
+	      	pickTime: true
+		});
+
 		$("#refresh").on("click", function(){
 			Page.toggleRefresh($(this).val());
 		});

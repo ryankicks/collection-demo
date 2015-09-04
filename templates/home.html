@@ -132,7 +132,7 @@ var chart = c3.generate({
   
 {% endif %}
 
-{% if lists %}
+{% if request.user.is_superuser and lists %}
 
 <h3> 
 	Criteria

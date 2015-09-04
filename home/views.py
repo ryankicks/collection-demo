@@ -21,6 +21,7 @@ def login(request):
     return render_to_response('login.html', context, context_instance=RequestContext(request))
 
 @login_required
+@user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='/')
 def home(request):
 
     # definition of all scorable categories and their point value

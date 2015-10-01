@@ -41,4 +41,4 @@ class Collection(AuditedModel):
         return "/collection/list"
 
     def __unicode__(self):
-        return "<Poll: %s, %s>" % (self.id, self.name)
+        return "<Collection: %s, %s, %s, %s>" % (self.id, self.name, self.list_slug, self.collection_id)

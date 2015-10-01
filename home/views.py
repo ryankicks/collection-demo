@@ -91,6 +91,8 @@ def collection_edit(request, id=None):
 
     if request.method == 'POST':
 
+        print coll
+
         if id:
             coll.id = id
         coll.save()

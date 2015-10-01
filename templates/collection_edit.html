@@ -30,7 +30,9 @@ Page.setRefresh({{settings.refresh}});
 
 <h3> 
 	Criteria
+<!--
 	<a href="https://twitter.com/{{list.user.screen_name}}/lists/" class="btn btn-default btn-sm pull-right" target="_target">View lists</a>
+-->
 </h3>
 
 <form class="form-horizontal" action="{{ coll.edit_url }}" method="post">
@@ -54,7 +56,7 @@ Page.setRefresh({{settings.refresh}});
   </div>
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">Source List <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to include in Collections "></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">Source list <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to include in Collections "></i></label>
     <div class="col-sm-8">
 	  	<select class="form-control" name="list_slug" id="list_slug">
 	  	<option value="">-- Select one --</option>
@@ -73,7 +75,7 @@ Page.setRefresh({{settings.refresh}});
   </div>
   
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">Target Collection <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to exclude from reply_to and retweet_of activity"></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">Target collection <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to exclude from reply_to and retweet_of activity"></i></label>
     <div class="col-sm-8">
 	  	<select class="form-control" name="collection_id" id="collection_id">
 	  	<option value="">-- Select one --</option>
@@ -117,21 +119,21 @@ Page.setRefresh({{settings.refresh}});
   </div>  
   
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">Min Retweets <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Minimum number of retweets"></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">Min retweets <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Minimum number of retweets"></i></label>
     <div class="col-sm-2">
     	<input type="text" class="form-control" name="retweet_count" value="{{coll.retweet_count}}">
     </div>
   </div>  
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">Min Favorites <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Minimum number of favorites"></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">Min favorites <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Minimum number of favorites"></i></label>
     <div class="col-sm-2">
     	<input type="text" class="form-control" name="favorite_count" value="{{coll.favorite_count}}">
     </div>
   </div>  
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">Min Engagements <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Minimum number of engagements (retweets + favorites)"></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">Min engagements <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Minimum number of engagements (retweets + favorites)"></i></label>
     <div class="col-sm-2">
     	<input type="text" class="form-control" name="engagement_count" value="{{coll.engagement_count}}">
     </div>
@@ -139,9 +141,9 @@ Page.setRefresh({{settings.refresh}});
   
   <div class="form-group">
     <label for="inputEmail3" class="col-sm-3 control-label"></label>
-    <div class="col-sm-4">
+    <div class="col-sm-9">
     	<button type="submit" id="save" class="btn btn-primary">Save</button>
-    	<button type="submit" id="run" class="btn btn-default">Run</button>
+    	<button type="submit" id="run" class="btn btn-default">Populate tweets</button>
     </div>
   </div>
 
@@ -150,8 +152,8 @@ Page.setRefresh({{settings.refresh}});
   <div class="col-md-6">
   
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label"><h4>Example</h4></label>
-    <div class="col-sm-8">
+    <label for="inputEmail3" class="col-sm-5 control-label"><h4>Example (In Progress)</h4></label>
+    <div class="col-sm-7">
     </div>
   </div>
 

@@ -2,8 +2,10 @@
 
 {% block content %}
 
-<a href="/collection/new" class="btn btn-small btn-primary pull-right">New Collection</a>
-<h2>Collections</h2>
+<a href="/collection/new" class="btn btn-small btn-primary pull-right">New Collection Pipe</a>
+<h2>Collection Pipes</h2>
+
+<p>Pipe tweets from users in an existing Twitter List.</p>
 
 <table class="table table-hover">
 <thead>
@@ -11,14 +13,14 @@
 <th>List</th>
 <th>Collection</th>
 <th>Block words</th>
-<th></th>
+<th>Actions</th>
 </thead>
 
 {% if collections %}
 {% for c in collections %}
 
 <tr>
-<td>{{ c.name }}</td>
+<td width="30%">{{ c.name }}</td>
 <td><a href="https://twitter.com/rchoi/lists/{{c.list_slug}}" target="_target">{{ c.list_name }}</a></td>
 <td><a href="https://twitter.com/rchoi/timelines/{{c.collection_id|slice:"7:"}}" target="_target">{{ c.collection_name }}</a></td>
 <td>{{ c.block_words }}</td>

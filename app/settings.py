@@ -51,6 +51,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'audit.middleware.AutoCreatedAndModifiedFields',
     'services.middleware.TimezoneMiddleware',
 )
 
@@ -129,6 +130,8 @@ SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/home'
 SOCIAL_AUTH_LOGIN_ERROR_URL    = '/login-error/'
 
 LOGIN_URL = '/login/twitter'
+
+OFFLINE = False
 
 # Get your Twitter key/secret from https://apps.twitter.com/
 SOCIAL_AUTH_TWITTER_KEY = environ.get('CONSUMER_KEY')               # Twitter API Consumer Key

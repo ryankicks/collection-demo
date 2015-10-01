@@ -13,6 +13,7 @@ from home.models import *
 PORT = os.environ.get('PORT', 9000)
 
 # run server locally
+@task
 def start():
     local("python manage.py runserver 127.0.0.1:%s --traceback --settings=%s" % (PORT, SETTINGS_FILE))
     

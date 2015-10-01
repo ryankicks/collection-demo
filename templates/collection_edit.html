@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<script language="JavaScript1.2">
+
+$(document).ready(function(){
+
+Page.init();
+	
+{% if settings.refresh %}
+Page.setRefresh({{settings.refresh}});
+{% endif %}
+	
+});
+
+</script>
+
+{% if list %}
+
+<h3>
+	{{ list.name }}{% if list.description %}: {{ list.description }} {% endif %} <small> {{results.items|length}} {% if results.items|length == 1 %} member {% else %} members {% endif %} </small>
+	
+	<button class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#myModal">Share Collections </button>
+	<div class="pull-right" style="width: 8px;">&nbsp;</div>
+	<a href="https://twitter.com/{{list.user.screen_name}}/lists/{{ list.slug }}" class="btn btn-default btn-sm pull-right" target="_target">View list</a>
+</h3>
+
+{% endif %}
+
+<h3> 
+	Criteria
+	<a href="https://twitter.com/{{list.user.screen_name}}/lists/" class="btn btn-default btn-sm pull-right" target="_target">View lists</a>
+</h3>
+
+<form class="form-horizontal" action="{{ coll.edit_url }}" method="post">
+<input type="hidden" name="id" value="{% if coll.id %}{{coll.id}}{% endif %}">
+<input type="hidden" name="list_name" id="list_name" value="">
+<input type="hidden" name="collection_name" id="collection_name" value="">
+<div class="row">
+  <div class="col-md-6">
+  
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-3 control-label"><h4>Collection</h4></label>
+    <div class="col-sm-8">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-3 control-label">Name</label>
+    <div class="col-sm-8">
+    	<input type="text" class="form-control" name="name" value="{{coll.name}}">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-3 control-label">Source List <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to include in Collections "></i></label>
+    <div class="col-sm-8">
+	  	<select class="form-control" name="list_slug" id="list_slug">
+	  	<option value="">-- Select one --</option>
+	  	
+  			<option value="exclude-list" >Exclude List (5)</option>
+  		
+  			<option value="team-jbulava" >Team - Jbulava (1)</option>
+  		
+  			<option value="dpr-platform" >DPR Platform: DPR Platform (4)</option>
+  			  			
+	  	{% for l in lists %}
+  			<option value="{{ l.slug }}" {% if l.slug == coll.list_slug %}SELECTED{% endif %}>{{ l.name }}{% if l.description %}: {{ l.description }}{% endif %} {% if l.member_count %}({{l.member_count}}){% endif %}</option>
+  		{% endfor %}
+  	  	</select>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-3 control-label">Target Collection <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to exclude from reply_to and retweet_of activity"></i></label>
+    <div class="col-sm-8">
+	  	<select class="form-control" name="collection_id" id="collection_id">
+	  	<option value="">-- Select one --</option>
+	  	
+  			<option value="custom-610962310828396545" >Twitter &amp; Tableau</option>
+  		
+  			<option value="custom-590747107813892097" >#NewsFoundry Hackathon: The best tweets from the #NewFoundry hackathon with @TwitterAU and @TwitterDev</option>
+  		
+  			<option value="custom-641707644063866880" >TwitterFlight</option>
+  		
+  			<option value="custom-552881899043975169" >#Obama: Best Obama News Now</option>
+  		
+  			<option value="custom-545401335382679553" >#Nike: My favorite #Nike shoes on Twitter.</option>
+  		
+  			<option value="custom-630943362581860352" >jbulavacollection</option>
+  		
+  			<option value="custom-522875858994749443" >#Camping: Best #camping tweets this summer.</option>
+  		
+  			<option value="custom-573658606916100096" >Vines &amp; Videos: Testing vines and videos in a timeline.</option>
+  		
+  			<option value="custom-549647846786347008" >#Graffitti: Best tags on Twitter.</option>
+  		
+  			<option value="custom-465609070674604032" >Cards: Great Twitter Cards in the wild.</option>
+  		
+  			<option value="custom-630942969739149312" >#Bieber</option>
+  		
+  			<option value="custom-549480147980517376" >#NFL: NFL Tweets.</option>
+	  	
+	  	{% for l in collections %}
+  			<option value="{{ l.id }}" {% if l.id == coll.collection_id %}SELECTED{% endif %}>{{ l.name }}{% if l.description %}: {{ l.description }}{% endif %}</option>
+  		{% endfor %}
+  	  	</select>
+    </div>
+  </div>  
+
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-3 control-label">Block words <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Words to filter tweets on"></i></label>
+    <div class="col-sm-8">
+        <textarea class="form-control" rows="3" name="block_words">{{coll.block_words}}</textarea>
+    </div>
+  </div>  
+  
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-3 control-label">Min Retweets <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Minimum number of retweets"></i></label>
+    <div class="col-sm-2">
+    	<input type="text" class="form-control" name="retweet_count" value="{{coll.retweet_count}}">
+    </div>
+  </div>  
+
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-3 control-label">Min Favorites <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Minimum number of favorites"></i></label>
+    <div class="col-sm-2">
+    	<input type="text" class="form-control" name="favorite_count" value="{{coll.favorite_count}}">
+    </div>
+  </div>  
+
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-3 control-label">Min Engagements <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Minimum number of engagements (retweets + favorites)"></i></label>
+    <div class="col-sm-2">
+    	<input type="text" class="form-control" name="engagement_count" value="{{coll.engagement_count}}">
+    </div>
+  </div>  
+  
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-3 control-label"></label>
+    <div class="col-sm-4">
+    	<button type="submit" id="save" class="btn btn-primary">Save</button>
+    	<button type="submit" id="run" class="btn btn-default">Run</button>
+    </div>
+  </div>
+
+
+  </div>
+  <div class="col-md-6">
+  
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-3 control-label"><h4>Example</h4></label>
+    <div class="col-sm-8">
+    </div>
+  </div>
+
+    
+  <div class="form-group">
+    <div class="col-sm-12">
+    
+<a class="twitter-timeline" href="https://twitter.com/rchoi/timelines/641707644063866880" data-widget-id="649357937056477184">TwitterFlight</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+    </div>
+  </div>  
+    
+  </div>
+</div>
+
+</form>
+
+{% endblock %}

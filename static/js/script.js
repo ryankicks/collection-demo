@@ -4,32 +4,20 @@ var Page = {
 		
 		$('.help').popover()
 		
-		$('.datetimepicker').datetimepicker({
-	      	format: 'YYYY-MM-DD HH:mm',
-	      	pickTime: true
-		});
-
-		$("#refresh").on("click", function(){
-			Page.toggleRefresh($(this).val());
+		$("#save").on("click", function(){
+			
+			var list_name = $("#list_slug option:selected").html() 
+			$("#list_name").val(list_name);
+			
+			var collection_name = $("#collection_id option:selected").html()
+			$("#collection_name").val(collection_name);
+			
+			console.log(list_name + " " + collection_name);
+			
+//			return false;
+			return true;
 		});
 		
 	},
-		
-	setRefresh : function(interval){
-		setTimeout(function () {
-			window.location.reload();
-		}, interval);
-	},
-	
-	toggleRefresh : function(interval){
-		var url = $("#share_url").val();
-		var refresh = "&refresh=" + interval; 
-		if (url.indexOf(refresh) > 0){
-			url = url.replace(refresh, "");
-		} else {
-			url = url + refresh;
-		}
-		$("#share_url").val(url);
-	}
 
 }

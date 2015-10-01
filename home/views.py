@@ -64,9 +64,9 @@ def collection_edit(request, id=None):
         coll.favorite_count = int(request.REQUEST.get("favorite_count", 0)) 
         coll.engagement_count = int(request.REQUEST.get("engagement_count", 0)) 
         coll.block_words = request.REQUEST.get("block_words", "")
-        coll.exclude_retweets = request.REQUEST.get("exclude_retweets", True)
+        coll.include_retweets = request.REQUEST.get("include_retweets", False)
 
-    api = Twitter.get_client(request.user)
+    api = Twitter.get_twitter(request.user)
  
     lists = None
     collections = None

@@ -55,7 +55,7 @@ class Tz:
 class Twitter:
     
     @staticmethod
-    def get_client(user):
+    def get_twitter(user):
     
         from django.conf import settings
     
@@ -82,3 +82,9 @@ class Twitter:
             access_token_secret=access_token_secret)
     
         return api
+    
+    @staticmethod
+    def get_access_tokens(user):
+        usa = UserSocialAuth.objects.get(user=user, provider='twitter')
+        access_token = usa.extra_data['access_token']
+        return access_token

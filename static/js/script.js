@@ -32,14 +32,19 @@ var Page = {
 			
 			var valid = true;
 			
-			var list = $("#list_slug option:selected")
-			var collection = $("#collection_id option:selected")
+			var list = $("#list_slug option:selected");
+			var collection = $("#collection_id option:selected");
 			
-			var valid = list.val() && collection.val(); 
-			console.log("valid: " + valid);
+			var valid = list.val() && collection.val();
 			
-//			return false;
-			return valid;
+			if (!valid){
+				console.log("valid: " + valid);
+				alert("Please choose both a list and a collection.")
+				return false;
+			} else {
+				return true;
+			}
+			
 		});
 		
 	},

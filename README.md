@@ -71,6 +71,7 @@ Deploying to Heroku is even easier.
 
 - To sync the database, use the Heroku CLI and run the following:
 
+	`heroku run python manage.py syncdb --app your-app-name`
 	`heroku run python manage.py migrate --app your-app-name`
 	
 - Open a browser and go to the URL specified by your deploy (http://your-app-name.herokuapp.com)

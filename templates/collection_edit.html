@@ -8,10 +8,6 @@ $(document).ready(function(){
 
 Page.init();
 	
-{% if settings.refresh %}
-Page.setRefresh({{settings.refresh}});
-{% endif %}
-	
 });
 
 </script>
@@ -36,7 +32,7 @@ Page.setRefresh({{settings.refresh}});
 </h3>
 
 <form class="form-horizontal" action="{{ coll.edit_url }}" method="post">
-<input type="hidden" name="id" value="{% if coll.id %}{{coll.id}}{% endif %}">
+<input type="hidden" name="id" id="id" value="{% if coll.id %}{{coll.id}}{% endif %}">
 <input type="hidden" name="list_name" id="list_name" value="">
 <input type="hidden" name="collection_name" id="collection_name" value="">
 <div class="row">
@@ -161,7 +157,9 @@ Page.setRefresh({{settings.refresh}});
     <label for="inputEmail3" class="col-sm-3 control-label"></label>
     <div class="col-sm-9">
     	<button type="submit" id="save" class="btn btn-primary">Save</button>
-    	<button type="submit" id="run" class="btn btn-default">Populate tweets</button>
+    	{% if coll.id %}
+    	<a data-id="{{coll.id}}" id="process" class="btn btn-default">Save and populate tweets</a>
+    	{% endif %}
     </div>
   </div>
 

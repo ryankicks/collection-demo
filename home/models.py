@@ -39,7 +39,7 @@ class Collection(AuditedModel):
         api = Twitter.get_client(self.created_by)
 
         coll_tweet_ids = api.GetCollectionsEntries(self.collection_id)
-        list_statuses = api.GetListTimeline(None, self.list_slug, owner_screen_name=self.created_by.username)
+        list_statuses = api.GetListTimeline(None, self.list_slug, owner_screen_name=self.created_by.username, include_rts=(not self.exclude_retweets))
         
         for s in list_statuses:
             
@@ -76,6 +76,9 @@ class Collection(AuditedModel):
             return "/collection/%s/edit" % self.id
         else:
             return "/collection/new"
+
+    def process_url(self):
+        return "/collection/%s/process" % self.id
 
     def delete_url(self):
         return "/collection/%s/delete" % self.id

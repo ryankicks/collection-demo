@@ -23,6 +23,8 @@ Page.init();
 <th>List</th>
 <th>Collection</th>
 <th width="15%">Block words</th>
+<th width="10%">Min (RT/Fav/Eng)</th>
+<th width="10%">Include RT</th>
 <th width="15%">Actions</th>
 </thead>
 
@@ -34,6 +36,8 @@ Page.init();
 <td><a href="https://twitter.com/rchoi/lists/{{c.list_slug}}" target="_target">{{ c.list_name }}</a></td>
 <td><a href="https://twitter.com/rchoi/timelines/{{c.collection_id|slice:"7:"}}" target="_target">{{ c.collection_name }}</a></td>
 <td>{{ c.block_words }}</td>
+<td>{{ c.retweet_count }}/{{ c.favorite_count }}/{{ c.engagement_count }}</td>
+<td>{{ c.include_retweets }}</td>
 <td>
 	<a href="{{ c.edit_url }}">Edit</a>
 	|

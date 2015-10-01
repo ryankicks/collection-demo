@@ -25,7 +25,7 @@ class Collection(AuditedModel):
     favorite_count = models.PositiveIntegerField(null=True, blank=True, default=0)
     engagement_count = models.PositiveIntegerField(null=True, blank=True, default=0) 
     block_words = models.CharField(max_length=2400, null=True, blank=True)
-    exclude_retweets = models.BooleanField(default=True)
+    include_retweets = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
 
     def process(self):
@@ -36,10 +36,10 @@ class Collection(AuditedModel):
         if self.block_words:
             bw = self.block_words.lower().split()
         
-        api = Twitter.get_client(self.created_by)
+        api = Twitter.get_twitter(self.created_by)
 
         coll_tweet_ids = api.GetCollectionsEntries(self.collection_id)
-        list_statuses = api.GetListTimeline(None, self.list_slug, owner_screen_name=self.created_by.username, include_rts=(not self.exclude_retweets))
+        list_statuses = api.GetListTimeline(None, self.list_slug, owner_screen_name=self.created_by.username, include_rts=self.include_retweets)
         
         for s in list_statuses:
             

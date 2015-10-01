@@ -57,13 +57,10 @@ Page.init();
 	  	<select class="form-control" name="list_slug" id="list_slug">
 	  	<option value="">-- Select one --</option>
 	  	
-<!--	  	
-  			<option value="exclude-list" >Exclude List (5)</option>
-  		
-  			<option value="team-jbulava" >Team - Jbulava (1)</option>
-  		
-  			<option value="dpr-platform" >DPR Platform: DPR Platform (4)</option>
--->
+	  		{% if settings.OFFLINE %}
+  			<option value="team-jbulava" >offline - Team - Jbulava (1)</option>
+  			<option value="dpr-platform" >offline - DPR Platform: DPR Platform (4)</option>
+  			{% endif %}
   			  			
 	  	{% for l in lists %}
   			<option value="{{ l.slug }}" {% if l.slug == coll.list_slug %}SELECTED{% endif %}>{{ l.name }}{% if l.description %}: {{ l.description }}{% endif %} {% if l.member_count %}({{l.member_count}}){% endif %}</option>
@@ -78,31 +75,10 @@ Page.init();
 	  	<select class="form-control" name="collection_id" id="collection_id">
 	  	<option value="">-- Select one --</option>
 	  	
-<!--	  	
-  			<option value="custom-610962310828396545" >Twitter &amp; Tableau</option>
-  		
-  			<option value="custom-590747107813892097" >#NewsFoundry Hackathon: The best tweets from the #NewFoundry hackathon with @TwitterAU and @TwitterDev</option>
-  		
-  			<option value="custom-641707644063866880" >TwitterFlight</option>
-  		
-  			<option value="custom-552881899043975169" >#Obama: Best Obama News Now</option>
-  		
-  			<option value="custom-545401335382679553" >#Nike: My favorite #Nike shoes on Twitter.</option>
-  		
-  			<option value="custom-630943362581860352" >jbulavacollection</option>
-  		
-  			<option value="custom-522875858994749443" >#Camping: Best #camping tweets this summer.</option>
-  		
-  			<option value="custom-573658606916100096" >Vines &amp; Videos: Testing vines and videos in a timeline.</option>
-  		
-  			<option value="custom-549647846786347008" >#Graffitti: Best tags on Twitter.</option>
-  		
-  			<option value="custom-465609070674604032" >Cards: Great Twitter Cards in the wild.</option>
-  		
-  			<option value="custom-630942969739149312" >#Bieber</option>
-  		
-  			<option value="custom-549480147980517376" >#NFL: NFL Tweets.</option>
--->
+	  		{% if settings.OFFLINE %}
+  			<option value="custom-630943362581860352" >offline - jbulavacollection</option>
+  			<option value="custom-641707644063866880" >offline - TwitterFlight</option>
+  			{% endif %}
 	  	
 	  	{% for l in collections %}
   			<option value="{{ l.id }}" {% if l.id == coll.collection_id %}SELECTED{% endif %}>{{ l.name }}{% if l.description %}: {{ l.description }}{% endif %}</option>

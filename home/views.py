@@ -71,7 +71,8 @@ def collection_edit(request, id=None):
     lists = None
     collections = None
     
-    lists = api.GetLists(screen_name=request.user.username)
+    if not settings.OFFLINE:
+        lists = api.GetLists(screen_name=request.user.username)
     if not lists:
          
         list_temp = List()
@@ -79,7 +80,8 @@ def collection_edit(request, id=None):
         list_temp.name = "-- Create a list --"
         lists = [list_temp]
  
-    collections = api.GetCollections(screen_name=request.user.username)
+    if not settings.OFFLINE:
+        collections = api.GetCollections(screen_name=request.user.username)
     if not collections:
          
         collection_temp = Collection()
@@ -135,7 +137,7 @@ def collection_process(request, id=None):
 
 @login_required
 @csrf_exempt
-def settings (request):
+def settings_page (request):
     
     from timezones import zones
 

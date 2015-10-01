@@ -1,7 +1,7 @@
 {
-	"name":"twitter-leaderboard",
-	"description":"Leaderboard across a team for tweets and engagement activity.",
-	"repository":"https://github.com/ryankicks/twitter-leaderboard",
+	"name":"collection-pipes",
+	"description":"Simple way to pipe tweets into a Twitter Collection from a Twitter List.",
+	"repository":"https://github.com/ryankicks/collection-pipes",
 	"addons": ["heroku-postgresql:hobby-dev"],
 	"keywords":[
 		"python",

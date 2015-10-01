@@ -19,7 +19,7 @@ class TimezoneMiddleware(object):
             if tzname:
                 timezone.activate(pytz.timezone(tzname))
             else:
-                if "/settings" not in request.path and "/admin" not in request.path:
+                if "/settings" not in request.path and "/admin" not in request.path and "/static" not in request.path:
                     return redirect('/settings')
                 
 # Copyright (C) 2011 by Blade Polska s.c.

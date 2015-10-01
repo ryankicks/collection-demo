@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 
 from time import sleep
 from datetime import date, datetime, timedelta
@@ -53,8 +54,11 @@ class Collection(AuditedModel):
                 continue
             
             if bw:
-                tw = s.text.lower().split()
+                tw = re.findall(r"[\w']+", s.text.lower()) 
                 intersection = set(bw).intersection(tw)
+                
+#                 print len(intersection), intersection, bw, tw
+                
                 if len(intersection) > 0:
                     continue
             

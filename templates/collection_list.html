@@ -20,7 +20,7 @@
 {% for c in collections %}
 
 <tr>
-<td>{{ c.name }}</td>
+<td><a href={{ c.edit_url }}>{{ c.name }}</a></td>
 <td><a href="https://twitter.com/rchoi/lists/{{c.list_slug}}" target="_target">{{ c.list_name }}</a></td>
 <td><a href="https://twitter.com/rchoi/timelines/{{c.collection_id|slice:"7:"}}" target="_target">{{ c.collection_name }}</a></td>
 <td>{{ c.block_words }}</td>

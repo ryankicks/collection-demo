@@ -72,6 +72,24 @@ class Collection(AuditedModel):
         
         return result
 
+    @staticmethod
+    def process_all():
+            
+        collection_count = 0
+        tweet_count = 0
+        
+        collections = Collection.objects.filter(Q(deleted=False)).order_by('-created_time')
+
+        for c in collections:
+            
+            result = c.process()
+            
+            tweet_count = tweet_count + len(result["added"]) 
+            collection_count = collection_count + 1
+            
+        return (collection_count, tweet_count)
+
+
     def new_url(self):
         return "/collection/new"
 

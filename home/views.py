@@ -67,27 +67,28 @@ def collection_edit(request, id=None):
         coll.favorite_count = int(request.REQUEST.get("favorite_count", 0)) 
         coll.engagement_count = int(request.REQUEST.get("engagement_count", 0)) 
         coll.block_words = request.REQUEST.get("block_words", "")
+        coll.exclude_retweets = request.REQUEST.get("exclude_retweets", True)
 
     api = get_twitter(request.user)
  
     lists = None
     collections = None
     
-#     lists = api.GetLists(screen_name=request.user.username)
-#     if not lists:
-#         
-#         list_temp = List()
-#         list_temp.id = ""
-#         list_temp.name = "-- Create a list --"
-#         lists = [list_temp]
-# 
-#     collections = api.GetCollections(screen_name=request.user.username)
-#     if not collections:
-#         
-#         collection_temp = Collection()
-#         collection_temp.id = ""
-#         list_temp.name = "-- Create a collection --"
-#         lists = [collection_temp]
+    lists = api.GetLists(screen_name=request.user.username)
+    if not lists:
+         
+        list_temp = List()
+        list_temp.id = ""
+        list_temp.name = "-- Create a list --"
+        lists = [list_temp]
+ 
+    collections = api.GetCollections(screen_name=request.user.username)
+    if not collections:
+         
+        collection_temp = Collection()
+        collection_temp.id = ""
+        list_temp.name = "-- Create a collection --"
+        lists = [collection_temp]
 
     if request.method == 'POST':
 

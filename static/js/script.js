@@ -30,6 +30,9 @@ var Page = {
 		
 		$("#save").on("click", function(){
 			
+			$("#list_slug").trigger("change");
+			$("#collection_id").trigger("change");
+			
 			var valid = true;
 			
 			var list = $("#list_slug option:selected");
@@ -39,7 +42,7 @@ var Page = {
 			
 			if (!valid){
 				console.log("valid: " + valid);
-				alert("Please choose both a list and a collection.")
+				alert("Name, list and collection are required.")
 				return false;
 			} else {
 				return true;

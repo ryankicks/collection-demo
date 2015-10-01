@@ -43,7 +43,7 @@ Page.setRefresh({{settings.refresh}});
   <div class="col-md-6">
   
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label"><h4>Collection</h4></label>
+    <label for="inputEmail3" class="col-sm-4 control-label"><h4 class="pull-left">Collection Pipe</h4></label>
     <div class="col-sm-8">
     </div>
   </div>
@@ -61,11 +61,13 @@ Page.setRefresh({{settings.refresh}});
 	  	<select class="form-control" name="list_slug" id="list_slug">
 	  	<option value="">-- Select one --</option>
 	  	
+<!--	  	
   			<option value="exclude-list" >Exclude List (5)</option>
   		
   			<option value="team-jbulava" >Team - Jbulava (1)</option>
   		
   			<option value="dpr-platform" >DPR Platform: DPR Platform (4)</option>
+-->
   			  			
 	  	{% for l in lists %}
   			<option value="{{ l.slug }}" {% if l.slug == coll.list_slug %}SELECTED{% endif %}>{{ l.name }}{% if l.description %}: {{ l.description }}{% endif %} {% if l.member_count %}({{l.member_count}}){% endif %}</option>
@@ -80,6 +82,7 @@ Page.setRefresh({{settings.refresh}});
 	  	<select class="form-control" name="collection_id" id="collection_id">
 	  	<option value="">-- Select one --</option>
 	  	
+<!--	  	
   			<option value="custom-610962310828396545" >Twitter &amp; Tableau</option>
   		
   			<option value="custom-590747107813892097" >#NewsFoundry Hackathon: The best tweets from the #NewFoundry hackathon with @TwitterAU and @TwitterDev</option>
@@ -103,6 +106,7 @@ Page.setRefresh({{settings.refresh}});
   			<option value="custom-630942969739149312" >#Bieber</option>
   		
   			<option value="custom-549480147980517376" >#NFL: NFL Tweets.</option>
+-->
 	  	
 	  	{% for l in collections %}
   			<option value="{{ l.id }}" {% if l.id == coll.collection_id %}SELECTED{% endif %}>{{ l.name }}{% if l.description %}: {{ l.description }}{% endif %}</option>
@@ -110,32 +114,46 @@ Page.setRefresh({{settings.refresh}});
   	  	</select>
     </div>
   </div>  
+  
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-4 control-label"><h4 class="pull-left">Filter criteria</h4></label>
+    <div class="col-sm-8">
+    </div>
+  </div>
+
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">Block words <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Words to filter tweets on"></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">Block words <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="If a tweet contains any of these words, it will not be included in the collection."></i></label>
     <div class="col-sm-8">
-        <textarea class="form-control" rows="3" name="block_words">{{coll.block_words}}</textarea>
+        <textarea class="form-control" rows="3" name="block_words">{% if coll.block_words %}{{coll.block_words}}{% endif %}</textarea>
     </div>
   </div>  
   
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">Min retweets <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Minimum number of retweets"></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">Min retweets <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Only tweets with a minimum of this many retweets is included"></i></label>
     <div class="col-sm-2">
     	<input type="text" class="form-control" name="retweet_count" value="{{coll.retweet_count}}">
     </div>
   </div>  
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">Min favorites <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Minimum number of favorites"></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">Min favorites <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Only tweets with a minimum of this many favorites is included"></i></label>
     <div class="col-sm-2">
     	<input type="text" class="form-control" name="favorite_count" value="{{coll.favorite_count}}">
     </div>
   </div>  
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">Min engagements <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Minimum number of engagements (retweets + favorites)"></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">Min engmt <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Only tweets with a minimum of this many engagements (retweets + favorites) is included"></i></label>
     <div class="col-sm-2">
     	<input type="text" class="form-control" name="engagement_count" value="{{coll.engagement_count}}">
+    </div>
+  </div>  
+
+  <div class="form-group">
+    <label for="inputEmail3" class="col-sm-3 control-label"></label>
+    <div class="col-sm-9">
+    	<input type="checkbox" name="exclude_retweets" value="1" {% if coll.exclude_retweets %}CHECKED{% endif %}> &nbsp;Exclude user retweets from collection 
     </div>
   </div>  
   
@@ -152,7 +170,7 @@ Page.setRefresh({{settings.refresh}});
   <div class="col-md-6">
   
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-5 control-label"><h4>Example (In Progress)</h4></label>
+    <label for="inputEmail3" class="col-sm-5 control-label"><h4 class="pull-left">Example (In Progress)</h4></label>
     <div class="col-sm-7">
     </div>
   </div>

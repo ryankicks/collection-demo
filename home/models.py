@@ -23,6 +23,7 @@ class Collection(AuditedModel):
     favorite_count = models.PositiveIntegerField(null=True, blank=True, default=0)
     engagement_count = models.PositiveIntegerField(null=True, blank=True, default=0) 
     block_words = models.CharField(max_length=2400, null=True, blank=True)
+    exclude_retweets = models.BooleanField(default=True)
     deleted = models.BooleanField(default=False)
 
     def new_url(self):

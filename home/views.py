@@ -1,6 +1,7 @@
 import base64
 import copy
 import pytz
+import json
 from time import *
 
 from django import forms
@@ -17,8 +18,6 @@ from django.db.models import Q
 
 from social.apps.django_app.default.models import UserSocialAuth
 
-import twitter
-from twitter import *
 from home.utils import *
 from home.models import *
 
@@ -38,8 +37,6 @@ def collection_list(request):
 
     collections = Collection.objects.filter(filter).order_by('-created_time')
     
-    print collections
-
     context = {"request": request, "collections": collections}
     return render_to_response('collection_list.html', context, context_instance=RequestContext(request))
 
@@ -69,7 +66,7 @@ def collection_edit(request, id=None):
         coll.block_words = request.REQUEST.get("block_words", "")
         coll.exclude_retweets = request.REQUEST.get("exclude_retweets", True)
 
-    api = get_twitter(request.user)
+    api = Twitter.get_client(request.user)
  
     lists = None
     collections = None
@@ -91,8 +88,6 @@ def collection_edit(request, id=None):
         lists = [collection_temp]
 
     if request.method == 'POST':
-
-        print coll
 
         if id:
             coll.id = id
@@ -121,6 +116,22 @@ def collection_delete(request, id=None):
         coll.save()
 
     return redirect('/collection/list')
+
+@login_required
+@csrf_exempt
+# @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='/')
+def collection_process(request, id=None):
+
+    response_data = {}
+
+    id = request.REQUEST.get("id", id)
+    if id:
+        coll = Collection.objects.get(pk=id)
+        result = coll.process()
+
+    response_data['result'] = result
+    
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 @login_required
 @csrf_exempt
@@ -168,30 +179,3 @@ def logout(request):
     auth_logout(request)
     return HttpResponseRedirect('/')
 
-def get_twitter(user):
-
-    from django.conf import settings
-
-    consumer_key = settings.SOCIAL_AUTH_TWITTER_KEY  
-    consumer_secret = settings.SOCIAL_AUTH_TWITTER_SECRET 
-    access_token_key = settings.TWITTER_ACCESS_TOKEN 
-    access_token_secret = settings.TWITTER_ACCESS_TOKEN_SECRET 
-
-    usa = UserSocialAuth.objects.get(user=user, provider='twitter')
-    if usa:
-        access_token = usa.extra_data['access_token']
-        if access_token:
-            access_token_key = access_token['oauth_token']
-            access_token_secret = access_token['oauth_token_secret']
-
-    if not access_token_key or not access_token_secret:
-        raise Exception('No user for twitter API call')
-
-    api = twitter.Api(
-        base_url='https://api.twitter.com/1.1',
-        consumer_key=consumer_key,
-        consumer_secret=consumer_secret,
-        access_token_key=access_token_key,
-        access_token_secret=access_token_secret)
-
-    return api

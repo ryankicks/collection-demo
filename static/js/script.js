@@ -19,8 +19,11 @@ var Page = {
 		$("#collection_id").on("change", function(){
 			
 			var collection = $("#collection_id option:selected")
+			var collection_id = collection.val();
 			var collection_name = collection.html();
-			if (collection.val()){
+			if (collection_id == 'new'){
+				alert('new');
+			} else if (collection_id){
 				$("#collection_name").val(collection_name);
 			}
 

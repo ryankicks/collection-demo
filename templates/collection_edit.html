@@ -18,8 +18,10 @@ Page.init();
 	{{ list.name }}{% if list.description %}: {{ list.description }} {% endif %} <small> {{results.items|length}} {% if results.items|length == 1 %} member {% else %} members {% endif %} </small>
 	
 	<button class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#myModal">Share Collections </button>
+<!--
 	<div class="pull-right" style="width: 8px;">&nbsp;</div>
 	<a href="https://twitter.com/{{list.user.screen_name}}/lists/{{ list.slug }}" class="btn btn-default btn-sm pull-right" target="_target">View list</a>
+-->
 </h3>
 
 {% endif %}
@@ -66,6 +68,9 @@ Page.init();
   			<option value="{{ l.slug }}" {% if l.slug == coll.list_slug %}SELECTED{% endif %}>{{ l.name }}{% if l.description %}: {{ l.description }}{% endif %} {% if l.member_count %}({{l.member_count}}){% endif %}</option>
   		{% endfor %}
   	  	</select>
+  	  	<p>
+  	  		<a href="https://twitter.com/{{request.user.username}}/lists/" class="small pull-right link_external" target="_target">View lists</a>
+  	  	</p>
     </div>
   </div>
   
@@ -83,6 +88,7 @@ Page.init();
 	  	{% for l in collections %}
   			<option value="{{ l.id }}" {% if l.id == coll.collection_id %}SELECTED{% endif %}>{{ l.name }}{% if l.description %}: {{ l.description }}{% endif %}</option>
   		{% endfor %}
+  			<option value="new" >-- Create collection --</option>
   	  	</select>
     </div>
   </div>  

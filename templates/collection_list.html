@@ -18,6 +18,9 @@ $(document).ready(function(){
 <table class="table table-hover">
 <thead>
 <th>Name</th>
+{% if request.user.is_superuser %}
+<th>Owner</th>
+{% endif %}
 <th>List</th>
 <th>Collection</th>
 <th>Start</th>
@@ -34,6 +37,9 @@ $(document).ready(function(){
 
 <tr>
 <td><a href={{ c.edit_url }}>{{ c.name }}</a></td>
+{% if request.user.is_superuser %}
+<td><a href="https://twitter.com/{{ c.created_by.username }}" target="_target">{{ c.created_by.username }}</a></td>
+{% endif %}
 <td><a href="https://twitter.com/rchoi/lists/{{c.list_slug}}" target="_target">{{ c.list_name }}</a></td>
 <td><a href="https://twitter.com/rchoi/timelines/{{c.collection_id|slice:"7:"}}" target="_target">{{ c.collection_name }}</a></td>
 <td>{{c.start_date|date:"Y-m-d H:i" }}</td>
@@ -43,8 +49,6 @@ $(document).ready(function(){
 <td>{% if c.include_retweets %}<i class="fa fa-check"></i>{% endif %}</td>
 -->
 <td>
-	<a href="{{ c.edit_url }}">Edit</a>
-	|
 	<a data-id="{{c.id}}" class="process">Process</a>
 	|
 	<a href="{{ c.delete_url }}">Delete</a>

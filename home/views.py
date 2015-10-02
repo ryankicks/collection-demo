@@ -55,6 +55,9 @@ def collection_edit(request, id=None):
         coll = Collection.objects.get(pk=id)
     else:
         coll = Collection()
+        
+    if not request.user.is_superuser and coll.created_by != request.user:
+        raise Exception("Cannot access this collection pipeline")
     
     if request.method == 'POST':
         

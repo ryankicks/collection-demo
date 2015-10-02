@@ -56,6 +56,10 @@ class Collection(AuditedModel):
             if self.engagement_count and self.engagement_count > (s.retweet_count + s.favorite_count):
                 ignored.append(s.id)
                 continue
+
+            if s.retweeted_status:
+                ignored.append(s.id)
+                continue
             
             if bw:
                 tw = re.findall(r"[\w']+", s.text.lower()) 
@@ -67,7 +71,7 @@ class Collection(AuditedModel):
             
             if s.id not in coll_tweet_ids:
 #                 print "Adding to %s: %s" % (self.collection_id, s.id)
-                api.AddToCollection(self.collection_id, s.id)
+                response = api.AddToCollection(self.collection_id, s.id)
                 added.append(s.id)
                 
         result = {}

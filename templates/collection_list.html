@@ -22,7 +22,9 @@ $(document).ready(function(){
 <th>Collection</th>
 <th>Block words</th>
 <th>Min (RT/Fav/Eng)</th>
+<!--
 <th>Include RT</th>
+-->
 <th width="15%">Actions</th>
 </thead>
 
@@ -35,7 +37,9 @@ $(document).ready(function(){
 <td><a href="https://twitter.com/rchoi/timelines/{{c.collection_id|slice:"7:"}}" target="_target">{{ c.collection_name }}</a></td>
 <td>{{ c.block_words }}</td>
 <td>{{ c.retweet_count }}/{{ c.favorite_count }}/{{ c.engagement_count }}</td>
+<!--
 <td>{% if c.include_retweets %}<i class="fa fa-check"></i>{% endif %}</td>
+-->
 <td>
 	<a href="{{ c.edit_url }}">Edit</a>
 	|

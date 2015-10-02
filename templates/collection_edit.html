@@ -2,14 +2,6 @@
 
 {% block content %}
 
-<script language="JavaScript1.2">
-
-$(document).ready(function(){
-	Page.init('{{request.user.username}}');	
-});
-
-</script>
-
 {% if list %}
 
 <h3>
@@ -188,6 +180,10 @@ window.twttr = (function(d, s, id) {
  
   return t;
 }(document, "script", "twitter-wjs"));
+
+window.twttr.ready(function(){
+	Page.init('{{request.user.username}}', '{{coll.list_slug}}', '{{coll.collection_id}}');	
+});
 
 </script>
 

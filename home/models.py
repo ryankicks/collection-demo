@@ -32,6 +32,7 @@ class Collection(AuditedModel):
     def process(self):
         
         added = []
+        ignored = []
         
         bw = None
         if self.block_words:
@@ -45,21 +46,23 @@ class Collection(AuditedModel):
         for s in list_statuses:
             
             if self.retweet_count and self.retweet_count > s.retweet_count:
+                ignored.append(s.id)
                 continue
                 
             if self.favorite_count and self.favorite_count > s.favorite_count:
+                ignored.append(s.id)
                 continue
                 
             if self.engagement_count and self.engagement_count > (s.retweet_count + s.favorite_count):
+                ignored.append(s.id)
                 continue
             
             if bw:
                 tw = re.findall(r"[\w']+", s.text.lower()) 
                 intersection = set(bw).intersection(tw)
                 
-#                 print len(intersection), intersection, bw, tw
-                
                 if len(intersection) > 0:
+                    ignored.append(s.id)
                     continue
             
             if s.id not in coll_tweet_ids:
@@ -68,7 +71,10 @@ class Collection(AuditedModel):
                 added.append(s.id)
                 
         result = {}
+        result["list_slug"] = self.list_slug
+        result["collection_id"] = self.collection_id
         result["added"] = added
+        result["ignored"] = ignored
         
         return result
 

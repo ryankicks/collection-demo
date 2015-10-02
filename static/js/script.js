@@ -2,15 +2,21 @@ var Page = {
 
 	user : null,
 		
-	init : function(user){
+	init : function(user, list_slug, collection_id){
 		
 		Page.user = user;
 		
 		$('.help').popover();
-		$("#link_list").hide();
-		$("#link_collection").hide();
 		
-		Page.showCollectionPreview();
+		if (!list_slug){
+			$("#link_list").hide();
+		}
+		
+		if (!collection_id){
+			$("#link_collection").hide();
+		} else {
+			Page.show_collection(collection_id);
+		}
 		
 		$("#list_slug").on("change", function(){
 
@@ -45,10 +51,7 @@ var Page = {
 				$("#collection_name").val(collection_name);
 				$("#link_collection").fadeIn();
 				
-				var params = {"collection_name": collection_name, "collection_id": collection_id.substring(7)}
-				Page.showCollectionPreview(params);
-				
-				window.twttr.widgets.load();
+				Page.show_collection(collection_id);
 				
 			} else {
 				$("#link_collection").hide();
@@ -57,13 +60,10 @@ var Page = {
 					window.open("https://tweetdeck.twitter.com/", "_target");
 				}
 				
-				Page.showCollectionPreview();
+				Page.show_collection();
 				
 			}
 
-			console.log(params);
-			console.log(template);
-			console.log(output);
 			console.log('When dynamic widgets are available, this will change the widget to preview the collection');
 		});
 
@@ -114,42 +114,6 @@ var Page = {
 
 	},
 	
-	showCollectionPreview : function(params){
-		
-		var output = "";
-		if (params){
-			var template = $("#collectionTemplate").html();
-			Mustache.parse(template);
-			output = Mustache.render(template, params);
-		} else {
-			output = $("#loadingTemplate").html();
-		}
-		$("#collection_preview").html(output);
-
-	},
-	
-	process : function(id){
-
-		var url = "/collection/" + id + "/process";
-		 $.ajax({
-				type : "GET",
-				url : url,
-				dataType : "json",
-				success : function(response) {
-					console.log(response);
-					
-					var result = response.result;
-					var added = result.added;
-					
-					alert("Added " + added.length + " tweets to collection.");
-					
-				},
-				error : Page.handle_error 
-			});	
-		
-		
-	},
-	
 	save : function(){
 		
 		$("#list_slug").trigger("change");
@@ -169,6 +133,50 @@ var Page = {
 		} else {
 			return true;
 		}
+		
+	},
+	
+	process : function(id){
+
+		var url = "/collection/" + id + "/process";
+		 $.ajax({
+				type : "GET",
+				url : url,
+				dataType : "json",
+				success : function(response) {
+					console.log(response);
+					
+					var result = response.result;
+					var added = result.added;
+					var ignored = result.ignored;
+					var collection_id = result.collection_id;
+					
+					alert("Added " + added.length + " tweets to collection. (" + ignored.length + " ignored.)");
+					
+					Page.show_collection(collection_id);
+					
+				},
+				error : Page.handle_error 
+			});	
+		
+		
+	},
+	
+	show_collection : function(collection_id){
+		
+		var output = "";
+		if (collection_id){
+			var template = $("#collectionTemplate").html();
+			Mustache.parse(template);
+			var params = {"collection_name": "", "collection_id": collection_id.substring(7)}
+			output = Mustache.render(template, params);
+		} else {
+			output = $("#loadingTemplate").html();
+		}
+		console.log(output);
+		$("#collection_preview").html(output);
+		
+		window.twttr.widgets.load();
 		
 	},
 	

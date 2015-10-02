@@ -2,6 +2,7 @@ import base64
 import copy
 import pytz
 import json
+import datetime
 from time import *
 
 from django import forms
@@ -20,6 +21,8 @@ from social.apps.django_app.default.models import UserSocialAuth
 
 from home.utils import *
 from home.models import *
+
+DATE_FORMAT = "%Y-%m-%d %H:%M"
 
 def login(request):
     context = {"request": request}
@@ -54,7 +57,7 @@ def collection_edit(request, id=None):
         coll = Collection()
     
     if request.method == 'POST':
-    
+        
         coll.name = request.REQUEST.get("name", "")
         coll.list_slug = request.REQUEST.get("list_slug", None)
         coll.list_name = request.REQUEST.get("list_name", None)
@@ -65,6 +68,7 @@ def collection_edit(request, id=None):
         coll.engagement_count = int(request.REQUEST.get("engagement_count", 0)) 
         coll.block_words = request.REQUEST.get("block_words", "")
         coll.include_retweets = request.REQUEST.get("include_retweets", False)
+        coll.start_date = Tz.convert_to_utc(request.REQUEST.get("start_date", None), date_format="%Y-%m-%d %H:%M")
 
     api = Twitter.get_twitter(request.user)
  

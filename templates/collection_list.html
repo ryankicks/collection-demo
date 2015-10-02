@@ -20,6 +20,7 @@ $(document).ready(function(){
 <th>Name</th>
 <th>List</th>
 <th>Collection</th>
+<th>Start</th>
 <th>Block words</th>
 <th>Min (RT/Fav/Eng)</th>
 <!--
@@ -35,6 +36,7 @@ $(document).ready(function(){
 <td><a href={{ c.edit_url }}>{{ c.name }}</a></td>
 <td><a href="https://twitter.com/rchoi/lists/{{c.list_slug}}" target="_target">{{ c.list_name }}</a></td>
 <td><a href="https://twitter.com/rchoi/timelines/{{c.collection_id|slice:"7:"}}" target="_target">{{ c.collection_name }}</a></td>
+<td>{{c.start_date|date:"Y-m-d H:i" }}</td>
 <td>{{ c.block_words }}</td>
 <td>{{ c.retweet_count }}/{{ c.favorite_count }}/{{ c.engagement_count }}</td>
 <!--

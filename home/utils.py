@@ -46,11 +46,16 @@ class Tz:
         local_dt = dt.astimezone(user_tz)
         
         return local_dt
-    
+
+class Logger():
+
     @staticmethod
-    def convert_to_seconds(dt_utc):
-        
-        return mktime(dt_utc.timetuple())
+    def info(str):
+        LOGGER.info(str)
+
+    @staticmethod
+    def exception(str):
+        LOGGER.exception(str)
     
 class Twitter:
     

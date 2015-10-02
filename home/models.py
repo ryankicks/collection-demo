@@ -28,6 +28,7 @@ class Collection(AuditedModel):
     block_words = models.CharField(max_length=2400, null=True, blank=True)
     include_retweets = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
+    start_date = models.DateTimeField(default=datetime.today, blank=True) 
 
     def process(self):
         

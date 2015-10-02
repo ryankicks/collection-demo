@@ -18,6 +18,11 @@ var Page = {
 			Page.show_collection(collection_id);
 		}
 		
+		$('.datetimepicker').datetimepicker({
+	    	format: 'YYYY-MM-DD HH:mm',
+	    	pickTime: true
+		});
+		
 		$("#list_slug").on("change", function(){
 
 			var list = $("#list_slug option:selected")

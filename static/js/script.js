@@ -10,6 +10,8 @@ var Page = {
 		$("#link_list").hide();
 		$("#link_collection").hide();
 		
+		Page.showCollectionPreview();
+		
 		$("#list_slug").on("change", function(){
 
 			var list = $("#list_slug option:selected")
@@ -42,14 +44,26 @@ var Page = {
 			if (collection_id && collection_id != 'new'){
 				$("#collection_name").val(collection_name);
 				$("#link_collection").fadeIn();
+				
+				var params = {"collection_name": collection_name, "collection_id": collection_id.substring(7)}
+				Page.showCollectionPreview(params);
+				
+				window.twttr.widgets.load();
+				
 			} else {
 				$("#link_collection").hide();
+				$("#collection_preview").html("");
 				if (collection_id == 'new'){
 					window.open("https://tweetdeck.twitter.com/", "_target");
-				} 				
+				}
+				
+				Page.showCollectionPreview();
+				
 			}
 
-			console.log(collection_name);
+			console.log(params);
+			console.log(template);
+			console.log(output);
 			console.log('When dynamic widgets are available, this will change the widget to preview the collection');
 		});
 
@@ -97,6 +111,20 @@ var Page = {
 
 			return false;
 		});
+
+	},
+	
+	showCollectionPreview : function(params){
+		
+		var output = "";
+		if (params){
+			var template = $("#collectionTemplate").html();
+			Mustache.parse(template);
+			output = Mustache.render(template, params);
+		} else {
+			output = $("#loadingTemplate").html();
+		}
+		$("#collection_preview").html(output);
 
 	},
 	

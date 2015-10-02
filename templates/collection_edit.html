@@ -5,9 +5,7 @@
 <script language="JavaScript1.2">
 
 $(document).ready(function(){
-
-Page.init();
-	
+	Page.init('{{request.user.username}}');	
 });
 
 </script>
@@ -53,17 +51,16 @@ Page.init();
 	  	<option value="">-- Select one --</option>
 	  	
 	  		{% if settings.OFFLINE %}
-  			<option value="team-jbulava" >offline - Team - Jbulava (1)</option>
   			<option value="dpr-platform" >offline - DPR Platform: DPR Platform (4)</option>
   			{% endif %}
   			  			
 	  	{% for l in lists %}
   			<option value="{{ l.slug }}" {% if l.slug == coll.list_slug %}SELECTED{% endif %}>{{ l.name }}{% if l.description %}: {{ l.description }}{% endif %} {% if l.member_count %}({{l.member_count}}){% endif %}</option>
   		{% endfor %}
+  			<option value="new" >-- Create list --</option>
+
   	  	</select>
-  	  	<p>
-  	  		<a id="link_lists" href="https://twitter.com/{{request.user.username}}/lists/" class="small pull-right link_external" target="_target">View lists</a>
-  	  	</p>
+  	  	<a id="link_list" class="small pull-right link_external" target="_target">View list</a>
     </div>
   </div>
   
@@ -83,9 +80,7 @@ Page.init();
   		{% endfor %}
   			<option value="new" >-- Create collection --</option>
   	  	</select>
-  	  	<p>
-  	  		<a id="link_collection" class="small pull-right link_external" target="_target">View collection</a>
-  	  	</p>
+  	  	<a id="link_collection" class="small pull-right link_external" target="_target">View collection</a>
     </div>
   </div>  
   

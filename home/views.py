@@ -68,8 +68,8 @@ def collection_edit(request, id=None):
 
     api = Twitter.get_twitter(request.user)
  
-    lists = None
-    collections = None
+    lists = []
+    collections = []
     
     if not settings.OFFLINE:
         lists = api.GetLists(screen_name=request.user.username)
@@ -81,6 +81,15 @@ def collection_edit(request, id=None):
 
         if id:
             coll.id = id
+        
+        for l in lists:
+            if l.slug == coll.list_slug:
+                coll.list_name = l.name
+            
+        for c in collections:
+            if c.id == coll.collection_id:
+                coll.collection_name = c.name
+             
         coll.save()
         
         return redirect('/collection/list')

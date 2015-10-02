@@ -20,7 +20,7 @@ var Page = {
 				$("#list_name").val(list_name);
 			}
 			if (list_slug && list_slug != 'new'){
-				$("#list_name").val(collection_name);
+				$("#list_name").val(list_name);
 				$("#link_list").fadeIn();
 			} else {
 				$("#link_list").hide();

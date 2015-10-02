@@ -73,21 +73,9 @@ def collection_edit(request, id=None):
     
     if not settings.OFFLINE:
         lists = api.GetLists(screen_name=request.user.username)
-    if not lists:
-         
-        list_temp = List()
-        list_temp.id = ""
-        list_temp.name = "-- Create a list --"
-        lists = [list_temp]
  
     if not settings.OFFLINE:
         collections = api.GetCollections(screen_name=request.user.username)
-    if not collections:
-         
-        collection_temp = Collection()
-        collection_temp.id = ""
-        list_temp.name = "-- Create a collection --"
-        lists = [collection_temp]
 
     if request.method == 'POST':
 

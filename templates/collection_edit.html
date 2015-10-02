@@ -18,19 +18,12 @@ Page.init();
 	{{ list.name }}{% if list.description %}: {{ list.description }} {% endif %} <small> {{results.items|length}} {% if results.items|length == 1 %} member {% else %} members {% endif %} </small>
 	
 	<button class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#myModal">Share Collections </button>
-<!--
-	<div class="pull-right" style="width: 8px;">&nbsp;</div>
-	<a href="https://twitter.com/{{list.user.screen_name}}/lists/{{ list.slug }}" class="btn btn-default btn-sm pull-right" target="_target">View list</a>
--->
 </h3>
 
 {% endif %}
 
 <h3> 
 	Collection Pipeline{% if coll.name %}: {{coll.name}} {% endif %}
-<!--
-	<a href="https://twitter.com/{{list.user.screen_name}}/lists/" class="btn btn-default btn-sm pull-right" target="_target">View lists</a>
--->
 </h3>
 
 <form class="form-horizontal" action="{{ coll.edit_url }}" method="post">
@@ -69,13 +62,13 @@ Page.init();
   		{% endfor %}
   	  	</select>
   	  	<p>
-  	  		<a href="https://twitter.com/{{request.user.username}}/lists/" class="small pull-right link_external" target="_target">View lists</a>
+  	  		<a id="link_lists" href="https://twitter.com/{{request.user.username}}/lists/" class="small pull-right link_external" target="_target">View lists</a>
   	  	</p>
     </div>
   </div>
   
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">Target collection <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to exclude from reply_to and retweet_of activity"></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">Collection <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to exclude from reply_to and retweet_of activity"></i></label>
     <div class="col-sm-8">
 	  	<select class="form-control" name="collection_id" id="collection_id">
 	  	<option value="">-- Select one --</option>
@@ -90,6 +83,9 @@ Page.init();
   		{% endfor %}
   			<option value="new" >-- Create collection --</option>
   	  	</select>
+  	  	<p>
+  	  		<a id="link_collection" class="small pull-right link_external" target="_target">View collection</a>
+  	  	</p>
     </div>
   </div>  
   
@@ -150,7 +146,7 @@ Page.init();
   <div class="col-md-6">
   
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-5 control-label"><h4 class="pull-left">Example (In Progress)</h4></label>
+    <label for="inputEmail3" class="col-sm-5 control-label"><h4 class="pull-left">Example</h4></label>
     <div class="col-sm-7">
     </div>
   </div>
@@ -159,8 +155,14 @@ Page.init();
   <div class="form-group">
     <div class="col-sm-12">
     
+    <div class="well">
+    	Coming soon...
+    </div>
+    
+<!--    
 <a class="twitter-timeline" href="https://twitter.com/rchoi/timelines/641707644063866880" data-widget-id="649357937056477184">TwitterFlight</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+-->
 
     </div>
   </div>  

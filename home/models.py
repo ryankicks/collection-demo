@@ -41,7 +41,12 @@ class Collection(AuditedModel):
         
         api = Twitter.get_twitter(self.created_by)
 
-        list_statuses = api.GetListTimeline(None, self.list_slug, owner_screen_name=self.created_by.username, include_rts=False, count=25)
+        list_statuses = None
+        if self.list_slug == self.created_by.username:
+            list_statuses = api.GetUserTimeline(screen_name=self.created_by.username, include_rts=True, count=25)
+        else:
+            list_statuses = api.GetListTimeline(None, self.list_slug, owner_screen_name=self.created_by.username, include_rts=False, count=25)
+
         coll_tweet_ids = api.GetCollectionsEntries(self.collection_id, count=25)
         
         print "list tweet count: %s" % len(list_statuses)

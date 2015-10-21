@@ -41,7 +41,7 @@
     <div class="col-sm-8">
 	  	<select class="form-control" name="list_slug" id="list_slug">
 	  	<option value="">-- Select one --</option>
-	  	
+  			<option value="{{request.user.username}}">My tweets</option>
 	  		{% if settings.OFFLINE %}
   			<option value="dpr-platform" SELECTED>offline - DPR Platform: DPR Platform (4)</option>
   			{% endif %}

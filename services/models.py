@@ -22,13 +22,4 @@ class UserProfile(models.Model):
     def get_timezone(self):
       	return pytz.timezone(self.timezone)
 
-    def in_reminders_group(self):
-				return self.user.groups.filter(name='Reminders').exists() or self.user.is_superuser
-
-    def in_customcards_group(self):
-                return self.user.groups.filter(name='Custom Cards').exists() or self.user.is_superuser
-
-    def in_topspot_group(self):
-                return self.user.groups.filter(name='Top Spot').exists() or self.user.is_superuser
-    
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])

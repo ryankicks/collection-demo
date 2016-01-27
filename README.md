@@ -1,13 +1,14 @@
-Twitter Leaderboard
+Twitter Collections Sample
 =================
 
-Sample Django App that creates a leaderboard for a team's engagement and activity.
+Sample Django App that allows a user to identify top tweets (by engagements, filter words) and populate
+them into Collections. This can logically be used/extended to automated uses.
 
 <img src="screenshot.png" style="width: 70%;"/>
 
 As always, when developing on top of the Twitter platform, you must abide by the [Developer Agreement & Policy](https://dev.twitter.com/overview/terms/agreement-and-policy). 
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ryankicks/twitter-leaderboard)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ryankicks/collection-pipes)
 
 Requirements
 ============
@@ -30,10 +31,11 @@ Getting Started
 
 - In the Twitter App config, ensure the Callback URL is `http://127.0.0.1:9000/complete/twitter`
 
-- Specify your database settings in app/settings.py. Be sure to uncomment the section for using a local database.
-  (The default is set to easily deploy to Heroku.) 
+- In the settings.py or settings_my.py, set the following to your own key:
 
-- Specify your Twitter App tokens in app/settings.py:
+    SECRET_KEY = 'YOUR_SECRET_KEY'
+
+- Specify your Twitter API credentials in app/settings_my.py under the following section:
 
     SOCIAL_AUTH_TWITTER_KEY = ''
     
@@ -43,11 +45,15 @@ Getting Started
     
     TWITTER_ACCESS_TOKEN_SECRET = ''
 
-- To initialize your database, run the from the `twitter-leaderboard` directory:
+- To initialize your database, run the from the `django-rest-apis` directory:
 
-  `python manage.py syncdb`
+  `python manage.py syncdb --settings=app.settings_my`
+  
+  Then run:
+  
+  `python manage.py migrate --settings=app.settings_my`
 
-- To start the server, run the following from the `twitter-leaderboard` directory:
+- To start the server, run the following from the `collection-pipes` directory:
 
   `fab start`
   
@@ -56,7 +62,7 @@ Getting Started
 Deploying to Heroku
 ============
 
-Deploying to Heroku is even easier.  
+Deploying to Heroku is even easier. The defaults in settings.py are pre-configured  to easily deploy to Heroku.
 
 - Create a Twitter App (https://apps.twitter.com/)
 - Click on the Heroku button below
@@ -84,7 +90,7 @@ Then query for your initial user and update their profile as follows:
 
 	`heroku run python manage.py createsuperuser`
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ryankicks/twitter-leaderboard)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ryankicks/collection-pipes)
 
 
 NOTES

@@ -5,7 +5,7 @@ import os
 from fabric.api import *
 from fabric.contrib import django
 
-SETTINGS_FILE = "app.settings"
+SETTINGS_FILE = "app.settings_my"
 django.settings_module(SETTINGS_FILE)
 
 from home.models import *

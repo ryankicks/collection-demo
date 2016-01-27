@@ -44,7 +44,6 @@ def collection_list(request):
     return render_to_response('collection_list.html', context, context_instance=RequestContext(request))
 
 @login_required
-@csrf_exempt
 # @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='/')
 def collection_edit(request, id=None):
     
@@ -56,7 +55,7 @@ def collection_edit(request, id=None):
     else:
         coll = Collection()
         
-    if not request.user.is_superuser and coll.created_by != request.user:
+    if id and not request.user.is_superuser and coll.created_by != request.user:
         raise Exception("Cannot access this collection pipeline")
     
     if request.method == 'POST':
@@ -111,7 +110,6 @@ def collection_edit(request, id=None):
     return render_to_response('collection_edit.html', context, context_instance=RequestContext(request))
 
 @login_required
-@csrf_exempt
 # @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='/')
 def collection_delete(request, id=None):
 
@@ -124,7 +122,6 @@ def collection_delete(request, id=None):
     return redirect('/collection/list')
 
 @login_required
-@csrf_exempt
 # @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='/')
 def collection_process(request, id=None):
 
@@ -140,7 +137,6 @@ def collection_process(request, id=None):
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 @login_required
-@csrf_exempt
 def settings_page (request):
     
     from timezones import zones

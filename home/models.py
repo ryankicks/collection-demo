@@ -49,55 +49,57 @@ class Collection(AuditedModel):
         else:
             print "Insufficient info for GetListTimeline: slug=%s, owner_screen_name=%s" % (self.list_slug, self.created_by.username)
 
-        coll_tweet_ids = api.GetCollectionsEntries(self.collection_id, count=25)
-        
-        # print "list tweet count: %s" % len(list_statuses)
-        # print "collection tweet count: %s" % len(coll_tweet_ids)
-        
-        start_date = None
-        if (self.start_date):
-            start_date = int(self.start_date.strftime("%s"))
-        
-        for s in list_statuses:
-            
-            if start_date and start_date > int(s.created_at_in_seconds):
-                # print "\tfilter start_date (%s %s)" % (self.start_date, s.created_at) 
-                ignored.append(s.id)
-                continue
-            
-            if self.retweet_count and self.retweet_count > s.retweet_count:
-                # print "\tfilter retweet_count (%s %s)" % (self.retweet_count, s.retweet_count)
-                ignored.append(s.id)
-                continue
-                
-            if self.favorite_count and self.favorite_count > s.favorite_count:
-                # print "\tfilter favorite_count (%s %s)" % (self.favorite_count, s.favorite_count)
-                ignored.append(s.id)
-                continue
-                
-            if self.engagement_count and self.engagement_count > (s.retweet_count + s.favorite_count):
-                # print "\tfilter engagement_count (%s %s)" % (self.engagement_count, (s.retweet_count + s.favorite_count))
-                ignored.append(s.id)
-                continue
+        if list_statuses and len(list_statuses) > 0:
 
-            if s.retweeted_status:
-                # print "\tfilter retweet"
-                ignored.append(s.id)
-                continue
+            coll_tweet_ids = api.GetCollectionsEntries(self.collection_id, count=25)
             
-            if bw:
-                tw = re.findall(r"[\w']+", s.text.lower()) 
-                intersection = set(bw).intersection(tw)
+            # print "list tweet count: %s" % len(list_statuses)
+            # print "collection tweet count: %s" % len(coll_tweet_ids)
+            
+            start_date = None
+            if (self.start_date):
+                start_date = int(self.start_date.strftime("%s"))
+            
+            for s in list_statuses:
                 
-                if len(intersection) > 0:
-                    # print "\tfilter block words (%s)" % s.text
+                if start_date and start_date > int(s.created_at_in_seconds):
+                    # print "\tfilter start_date (%s %s)" % (self.start_date, s.created_at) 
                     ignored.append(s.id)
                     continue
-            
-            if s.id not in coll_tweet_ids:
-#                 print "Adding to %s: %s" % (self.collection_id, s.id)
-                response = api.AddToCollection(self.collection_id, s.id)
-                added.append(s.id)
+                
+                if self.retweet_count and self.retweet_count > s.retweet_count:
+                    # print "\tfilter retweet_count (%s %s)" % (self.retweet_count, s.retweet_count)
+                    ignored.append(s.id)
+                    continue
+                    
+                if self.favorite_count and self.favorite_count > s.favorite_count:
+                    # print "\tfilter favorite_count (%s %s)" % (self.favorite_count, s.favorite_count)
+                    ignored.append(s.id)
+                    continue
+                    
+                if self.engagement_count and self.engagement_count > (s.retweet_count + s.favorite_count):
+                    # print "\tfilter engagement_count (%s %s)" % (self.engagement_count, (s.retweet_count + s.favorite_count))
+                    ignored.append(s.id)
+                    continue
+    
+                if s.retweeted_status:
+                    # print "\tfilter retweet"
+                    ignored.append(s.id)
+                    continue
+                
+                if bw:
+                    tw = re.findall(r"[\w']+", s.text.lower()) 
+                    intersection = set(bw).intersection(tw)
+                    
+                    if len(intersection) > 0:
+                        # print "\tfilter block words (%s)" % s.text
+                        ignored.append(s.id)
+                        continue
+                
+                if s.id not in coll_tweet_ids:
+    #                 print "Adding to %s: %s" % (self.collection_id, s.id)
+                    response = api.AddToCollection(self.collection_id, s.id)
+                    added.append(s.id)
                 
         result = {}
         result["list_slug"] = self.list_slug

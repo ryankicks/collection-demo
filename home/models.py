@@ -51,6 +51,8 @@ class Collection(AuditedModel):
 
         if list_statuses and len(list_statuses) > 0 and self.collection_id:
 
+            print "Query collection: %s" % self.collection_id
+
             coll_tweet_ids = api.GetCollectionsEntries(self.collection_id, count=25)
             
             # print "list tweet count: %s" % len(list_statuses)

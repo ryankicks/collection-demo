@@ -2,7 +2,7 @@ Twitter Collections Sample
 =================
 
 Sample Django App that allows a user to identify top tweets (by engagements, filter words) and populate
-them into Collections. This can logically be used/extended to automated uses.
+them into Collections. This can logically be used/extended for automated purposes as well.
 
 <img src="screenshot.png" style="width: 70%;"/>
 
@@ -23,6 +23,10 @@ To run this sample code, you'll need to install the following libraries:
 You can install these with the following command:
 
 	pip install -r requirements.txt
+	
+Additionally, this code sample requires that your Twitter App has Collections enabled. You can get your app
+enabled for Collections by generating a token via [Fabric](https://fabric.io) or working with your Partner
+Manager to enable it for existing tokens.
 
 Getting Started
 ============

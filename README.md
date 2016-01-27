@@ -96,6 +96,22 @@ Then query for your initial user and update their profile as follows:
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ryankicks/collection-pipes)
 
+Running the pipeline on a Heroku Scheduler
+============
+
+You can run the processing of the pipeline in the background. To test your configuration, first set your 
+Heroku SETTINGS_FILE environment variable appropriately, and then run the following command:
+
+	`heroku run fab process --app=MY_APP_NAME'
+	
+If this runs properly, follow the below steps to run it as a scheduled job on Heroku:
+
+- Run `heroku addons:add scheduler:standard --app=MY_APP_NAME`
+- Log into heroku.com, open your app and go to "Resources"
+- Click on "Heroku Scheduler" and then "Add a New Job"
+- Type in `fab process`
+
+Confirm successful execution by viewing the output in the Heroku app logs.
 
 NOTES
 ============

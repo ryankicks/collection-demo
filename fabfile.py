@@ -1,11 +1,15 @@
 from __future__ import with_statement
 
 import os
+from os import environ
 
 from fabric.api import *
 from fabric.contrib import django
 
-SETTINGS_FILE = "app.settings_my"
+SETTINGS_FILE = environ.get('SETTINGS_FILE')
+if not SETTINGS_FILE:
+    SETTINGS_FILE = "app.settings_my"
+    
 django.settings_module(SETTINGS_FILE)
 
 from home.models import *

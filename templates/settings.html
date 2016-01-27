@@ -7,7 +7,7 @@
 
   
   
-<form method="POST" action="/settings">
+<form method="POST" action="/settings">{% csrf_token %}
 
 <input type="hidden" name="id" value="{{card.id}}">
 <table width="100%">

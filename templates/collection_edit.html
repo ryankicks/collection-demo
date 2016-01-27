@@ -16,7 +16,7 @@
 	Collection Pipeline{% if coll.name %}: {{coll.name}} {% endif %}
 </h3>
 
-<form class="form-horizontal" action="{{ coll.edit_url }}" method="post">
+<form class="form-horizontal" action="{{ coll.edit_url }}" method="post">{% csrf_token %}
 <input type="hidden" name="id" id="id" value="{% if coll.id %}{{coll.id}}{% endif %}">
 <input type="hidden" name="list_name" id="list_name" value="">
 <input type="hidden" name="collection_name" id="collection_name" value="">

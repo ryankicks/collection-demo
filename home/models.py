@@ -49,7 +49,7 @@ class Collection(AuditedModel):
         else:
             print "Insufficient info for GetListTimeline: slug=%s, owner_screen_name=%s" % (self.list_slug, self.created_by.username)
 
-        if list_statuses and len(list_statuses) > 0 and self.collection_id:
+        if list_statuses and len(list_statuses) > 0 and self.collection_id and self.collection_id != 'new':
 
             print "Query collection: %s" % self.collection_id
 

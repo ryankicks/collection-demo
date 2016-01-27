@@ -44,9 +44,10 @@ class Collection(AuditedModel):
         list_statuses = None
         if self.list_slug == self.created_by.username:
             list_statuses = api.GetUserTimeline(screen_name=self.created_by.username, include_rts=True, count=25)
-        else:
-            print self.list_slug, self.created_by.username
+        elif self.list_slug and self.created_by.username:
             list_statuses = api.GetListTimeline(None, self.list_slug, owner_screen_name=self.created_by.username, include_rts=False, count=25)
+        else:
+            print "Insufficient info for GetListTimeline: slug=%s, owner_screen_name=%s" % (self.list_slug, self.created_by.username)
 
         coll_tweet_ids = api.GetCollectionsEntries(self.collection_id, count=25)
         

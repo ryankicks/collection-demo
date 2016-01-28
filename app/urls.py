@@ -19,9 +19,6 @@ urlpatterns = patterns('',
     url(r'^settings$', views.settings_page, name='settings'),
     url(r'^logout$', views.logout, name='logout'),
     url('', include('social.apps.django_app.urls', namespace='social')),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
 )
 
-urlpatterns += patterns('',
- (r'^static/(.*)$', django.views.static.serve, {'document_root': settings.STATIC_ROOT}),
- )

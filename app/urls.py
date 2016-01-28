@@ -1,6 +1,5 @@
-from django.conf import settings
+import django
 from django.conf.urls import patterns, include, url
-from django.conf.urls.static import static
 
 from django.contrib import admin
 admin.autodiscover()
@@ -20,7 +19,9 @@ urlpatterns = patterns('',
     url(r'^settings$', views.settings_page, name='settings'),
     url(r'^logout$', views.logout, name='logout'),
     url('', include('social.apps.django_app.urls', namespace='social')),
-    url(r'^admin/', admin.site.urls),
+    url(r'^admin/', include(admin.site.urls)),
 )
 
-urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += patterns('',
+ (r'^static/(.*)$', django.views.static.serve, {'document_root': settings.STATIC_ROOT}),
+ )

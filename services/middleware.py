@@ -22,3 +22,13 @@ class TimezoneMiddleware(object):
                 if "/settings" not in request.path and "/admin" not in request.path and "/static" not in request.path:
                     return redirect('/settings')
             
+from django.conf import settings
+from django.http import HttpResponseRedirect
+
+class SSLMiddleware(object):
+
+    def process_request(self, request):
+        if not any([settings.DEBUG, request.is_secure(), request.META.get("HTTP_X_FORWARDED_PROTO", "") == 'https']):
+            url = request.build_absolute_uri(request.get_full_path())
+            secure_url = url.replace("http://", "https://")
+            return HttpResponseRedirect(secure_url)

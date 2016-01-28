@@ -1,25 +1,26 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
+from django.conf.urls.static import static
 
 from django.contrib import admin
 admin.autodiscover()
 
 from app import settings
+from home import views
 
 urlpatterns = patterns('',
-    url(r'^$', 'home.views.login', name='login'),
-    url(r'^home', 'home.views.collection_list', name='list'),
-    url(r'^collection/list$', 'home.views.collection_list', name='list'),
-    url(r'^collection/new$', 'home.views.collection_edit', name='edit'),
-    url(r'^collection/([a-zA-Z0-9\-]+)/delete', 'home.views.collection_delete', name='delete'),
-    url(r'^collection/([a-zA-Z0-9\-]+)/edit$', 'home.views.collection_edit', name='edit'),
-    url(r'^collection/([a-zA-Z0-9\-]+)/process', 'home.views.collection_process', name='process'),
-    url(r'^collection/([a-zA-Z0-9\-]+)$', 'home.views.collection_edit', name='edit'),
-    url(r'^settings$', 'home.views.settings_page', name='settings'),
-    url(r'^logout$', 'home.views.logout', name='logout'),
+    url(r'^$', views.login, name='login'),
+    url(r'^home', views.collection_list, name='list'),
+    url(r'^collection/list$', views.collection_list, name='list'),
+    url(r'^collection/new$', views.collection_edit, name='edit'),
+    url(r'^collection/([a-zA-Z0-9\-]+)/delete', views.collection_delete, name='delete'),
+    url(r'^collection/([a-zA-Z0-9\-]+)/edit$', views.collection_edit, name='edit'),
+    url(r'^collection/([a-zA-Z0-9\-]+)/process', views.collection_process, name='process'),
+    url(r'^collection/([a-zA-Z0-9\-]+)$', views.collection_edit, name='edit'),
+    url(r'^settings$', views.settings_page, name='settings'),
+    url(r'^logout$', views.logout, name='logout'),
     url('', include('social.apps.django_app.urls', namespace='social')),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
 )
 
-urlpatterns += patterns('',
- (r'^static/(.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
- )
+urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

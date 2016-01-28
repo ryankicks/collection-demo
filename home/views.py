@@ -49,7 +49,7 @@ def collection_edit(request, id=None):
     
     coll = None
     
-    id = request.REQUEST.get("id", id)
+    id = request.POST.get("id", id)
     if id:
         coll = Collection.objects.get(pk=id)
     else:
@@ -60,17 +60,17 @@ def collection_edit(request, id=None):
     
     if request.method == 'POST':
         
-        coll.name = request.REQUEST.get("name", "")
-        coll.list_slug = request.REQUEST.get("list_slug", None)
-        coll.list_name = request.REQUEST.get("list_name", None)
-        coll.collection_id = request.REQUEST.get("collection_id", None)
-        coll.collection_name = request.REQUEST.get("collection_name", None) 
-        coll.retweet_count = int(request.REQUEST.get("retweet_count", 0)) 
-        coll.favorite_count = int(request.REQUEST.get("favorite_count", 0)) 
-        coll.engagement_count = int(request.REQUEST.get("engagement_count", 0)) 
-        coll.block_words = request.REQUEST.get("block_words", "")
-        coll.include_retweets = request.REQUEST.get("include_retweets", False)
-        coll.start_date = Tz.convert_to_utc(request.REQUEST.get("start_date", None), date_format="%Y-%m-%d %H:%M")
+        coll.name = request.POST.get("name", "")
+        coll.list_slug = request.POST.get("list_slug", None)
+        coll.list_name = request.POST.get("list_name", None)
+        coll.collection_id = request.POST.get("collection_id", None)
+        coll.collection_name = request.POST.get("collection_name", None) 
+        coll.retweet_count = int(request.POST.get("retweet_count", 0)) 
+        coll.favorite_count = int(request.POST.get("favorite_count", 0)) 
+        coll.engagement_count = int(request.POST.get("engagement_count", 0)) 
+        coll.block_words = request.POST.get("block_words", "")
+        coll.include_retweets = request.POST.get("include_retweets", False)
+        coll.start_date = Tz.convert_to_utc(request.POST.get("start_date", None), date_format="%Y-%m-%d %H:%M")
 
     api = Twitter.get_twitter(request.user)
  
@@ -113,7 +113,7 @@ def collection_edit(request, id=None):
 # @user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='/')
 def collection_delete(request, id=None):
 
-    id = request.REQUEST.get("id", id)
+    id = request.GET.get("id", id)
     if id:
         coll = Collection.objects.get(pk=id)
         coll.deleted = True
@@ -127,7 +127,7 @@ def collection_process(request, id=None):
 
     response_data = {}
 
-    id = request.REQUEST.get("id", id)
+    id = request.GET.get("id", id)
     if id:
         coll = Collection.objects.get(pk=id)
         result = coll.process()
@@ -154,7 +154,7 @@ def settings_page (request):
         profile.twitter_access_token_secret = access_tokens.get('oauth_token_secret', None)
         profile.save()
 
-        profile.timezone = request.REQUEST.get("timezone", None)
+        profile.timezone = request.POST.get("timezone", None)
         profile.save()
         
         success_msg = "Saved."

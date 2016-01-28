@@ -1,20 +1,16 @@
 from __future__ import with_statement
 
 import os
-from os import environ
+import django
 
-from fabric.api import *
-from fabric.contrib import django
-
-SETTINGS_FILE = environ.get('SETTINGS_FILE')
-if not SETTINGS_FILE:
-    SETTINGS_FILE = "app.settings_my"
-    
-django.settings_module(SETTINGS_FILE)
-
-from home.models import *
+SETTINGS_FILE = "app.settings_my"
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", SETTINGS_FILE)
+django.setup()
 
 PORT = os.environ.get('PORT', 9000)
+
+from fabric.api import *
+from home.models import *
 
 # run server locally
 @task

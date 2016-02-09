@@ -23,23 +23,29 @@ var Page = {
 	    	pickTime: true
 		});
 		
-		$("#list_slug").on("change", function(){
+		$("#source_type").on("change", function(){
 
-			var list = $("#list_slug option:selected")
-			var list_slug = list.val();
-			var list_name = list.html();
+			var source_option = $("#source_type option:selected")
+			var source_type = source_option.val();
+			var source_name = source_option.html();
 			
-			if (list.val()){
-				$("#list_name").val(list_name);
-			}
-			if (list_slug && list_slug != 'new'){
-				$("#list_name").val(list_name);
-				$("#link_list").fadeIn();
-			} else {
+			console.log(source_type);
+			console.log(source_name);
+			
+			if (source_type == 'search') {
+				$("#search_holder").fadeIn();
 				$("#link_list").hide();
-				if (list_slug == 'new'){
-					window.open("https://twitter.com/"+Page.user+"/lists", "_target");
-				} 				
+			} else if (source_type == 'tweets_mine'){
+				$("#search_holder").hide();
+				$("#link_list").hide();
+			} else if (source_type == 'new'){
+				$("#search_holder").hide();
+				$("#link_list").fadeIn();
+				window.open("https://twitter.com/"+Page.user+"/lists", "_target");
+			} else if (source_type){
+				$("#search_holder").hide();
+				$("#list_slug").val(source_type);
+				$("#link_list").fadeIn();
 			}
 
 			console.log(list_name);
@@ -74,8 +80,8 @@ var Page = {
 
 		$("#link_list").on("click", function(){
 			
-			var list = $("#list_slug option:selected")
-			var list_slug = list.val();
+			var list_slug = $("#list_slug").val();
+			console.log(list_slug);
 			if (list_slug && list_slug != 'new'){
 				var url = "https://twitter.com/"+Page.user+"/lists/" + list_slug;
 				window.open(url);
@@ -116,24 +122,49 @@ var Page = {
 
 			return false;
 		});
+		
+		$("#source_type").change();
+		$("#collection_id").change();
 
 	},
 	
 	save : function(){
 		
-		$("#list_slug").trigger("change");
-		$("#collection_id").trigger("change");
+		var name = $("#name").val();
+		if (!name){
+			alert("Name is required.")
+			return false;
+		}
+
+		var collection = $("#collection_id option:selected").val();
+		if (!collection || collection == 'new'){
+			alert("Collection is required. If you recently created one, refresh this page and select it.")
+			return false;
+		}
+
+		var errorMsg = "";
+		var source_type = $("#source_type option:selected").val();
+
+		if (source_type == 'search') {
+			if ($("#search_term").val()){
+				return true;
+			} else {
+				errorMsg = "Search term is required.";
+			}
+
+		} else if (source_type == 'tweets_mine'){
+			return true;
+		} else if (source_type == 'new'){
+			errorMsg = "List is required. If you recently created one, refresh this page and select it.";
+		} else if (source_type){
+			if (!$("#list_name").val() && !$("#list_slug").val()){
+				errorMsg = "List is required. If you recently created one, refresh this page and select it.";
+			}
+		}
 		
-		var valid = true;
-		
-		var list = $("#list_slug option:selected");
-		var collection = $("#collection_id option:selected");
-		
-		var valid = list.val() && collection.val();
-		
-		if (!valid){
-			console.log("valid: " + valid);
-			alert("Name, list and collection are required.")
+		if (errorMsg){
+			console.log("valid: " + errorMsg);
+			alert(errorMsg)
 			return false;
 		} else {
 			return true;

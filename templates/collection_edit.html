@@ -19,6 +19,7 @@
 <form class="form-horizontal" action="{{ coll.edit_url }}" method="post">{% csrf_token %}
 <input type="hidden" name="id" id="id" value="{% if coll.id %}{{coll.id}}{% endif %}">
 <input type="hidden" name="list_name" id="list_name" value="">
+<input type="hidden" name="list_slug" id="list_slug" value="">
 <input type="hidden" name="collection_name" id="collection_name" value="">
 <div class="row">
   <div class="col-md-6">
@@ -32,27 +33,34 @@
   <div class="form-group">
     <label for="inputEmail3" class="col-sm-3 control-label">Details</label>
     <div class="col-sm-8">
-    	<input type="text" class="form-control" name="name" value="{{coll.name}}">
+    	<input type="text" class="form-control" name="name" id="name" value="{{coll.name}}">
     </div>
   </div>
 
   <div class="form-group">
-    <label for="inputEmail3" class="col-sm-3 control-label">Source list <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to include in Collections "></i></label>
+    <label for="inputEmail3" class="col-sm-3 control-label">Source <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="List of users to include in Collections, or a search term"></i></label>
     <div class="col-sm-8">
-	  	<select class="form-control" name="list_slug" id="list_slug">
+	  	<select class="form-control" name="source_type" id="source_type">
 	  	<option value="">-- Select one --</option>
-  			<option value="{{request.user.username}}">My tweets</option>
+  			<option value="tweets_mine" {% if coll.source_type == "tweets_mine" %}SELECTED{% endif %}>My tweets</option>
+  			<option value="search" {% if coll.source_type == "search" %}SELECTED{% endif %}>Search</option>
 	  		{% if settings.OFFLINE %}
   			<option value="dpr-platform" SELECTED>offline - DPR Platform: DPR Platform (4)</option>
   			{% endif %}
-  			  			
 	  	{% for l in lists %}
-  			<option value="{{ l.slug }}" {% if l.slug == coll.list_slug %}SELECTED{% endif %}>{{ l.name }}{% if l.description %}: {{ l.description }}{% endif %} {% if l.member_count %}({{l.member_count}}){% endif %}</option>
+  			<option value="{{ l.slug }}" {% if l.slug == coll.list_slug %}SELECTED{% endif %}>List: {{ l.name }}{% if l.description %}: {{ l.description }}{% endif %} {% if l.member_count %}({{l.member_count}}){% endif %}</option>
   		{% endfor %}
-  			<option value="new" >-- Create new list --</option>
+  			<option value="new" >List: -- Create new --</option>
 
   	  	</select>
   	  	<a id="link_list" class="small pull-right link_external" target="_target">View list</a>
+    </div>
+  </div>
+  
+  <div class="form-group" id="search_holder">
+    <label for="inputEmail3" class="col-sm-3 control-label">Search term <i class="fa fa-info-circle help" data-container="body" data-toggle="popover" data-trigger="hover" data-placement="auto" data-content="Search term (test at https://twitter.com/search)"></i></label>
+    <div class="col-sm-8">
+    	<input type="text" class="form-control" name="search_term" id="search_term" value="{{coll.search_term}}">
     </div>
   </div>
   
@@ -176,23 +184,6 @@
 {% endverbatim %}
 
 <script language="JavaScript1.2">
-
-window.twttr = (function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0],
-    t = window.twttr || {};
-  if (d.getElementById(id)) return;
-  js = d.createElement(s);
-  js.id = id;
-  js.src = "https://platform.twitter.com/widgets.js";
-  fjs.parentNode.insertBefore(js, fjs);
- 
-  t._e = [];
-  t.ready = function(f) {
-    t._e.push(f);
-  };
- 
-  return t;
-}(document, "script", "twitter-wjs"));
 
 window.twttr.ready(function(){
 	Page.init('{{request.user.username}}', '{{coll.list_slug}}', '{{coll.collection_id}}');	

@@ -61,8 +61,10 @@ def collection_edit(request, id=None):
     if request.method == 'POST':
         
         coll.name = request.POST.get("name", "")
+        coll.source_type = request.POST.get("source_type", None)
         coll.list_slug = request.POST.get("list_slug", None)
         coll.list_name = request.POST.get("list_name", None)
+        coll.search_term = request.POST.get("search_term", None)
         coll.collection_id = request.POST.get("collection_id", None)
         coll.collection_name = request.POST.get("collection_name", None) 
         coll.retweet_count = int(request.POST.get("retweet_count", 0)) 
@@ -133,6 +135,7 @@ def collection_process(request, id=None):
         result = coll.process()
 
     response_data['result'] = result
+    print response_data
     
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 

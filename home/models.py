@@ -15,11 +15,19 @@ from audit.models import AuditedModel, Access
 
 from home.utils import *
 
+SOURCE_TYPES = (
+    ('tweets_mine', 'My tweets'),
+    ('search', 'Search term'),
+    ('list', 'List'),
+)
+
 class Collection(AuditedModel):
     
     name = models.CharField(max_length=100, null=False, blank=False)
+    source_type = models.CharField(max_length=100, null=False, blank=False, choices=SOURCE_TYPES)
     list_slug = models.CharField(max_length=100, null=False, blank=False)
     list_name = models.CharField(max_length=100, null=False, blank=False)
+    search_term = models.CharField(max_length=100, null=False, blank=False)
     collection_id = models.CharField(max_length=100, null=False, blank=False)
     collection_name = models.CharField(max_length=100, null=False, blank=False)
     retweet_count = models.PositiveIntegerField(null=True, blank=True, default=0)
@@ -40,25 +48,27 @@ class Collection(AuditedModel):
             bw = self.block_words.lower().split()
         
         api = Twitter.get_twitter(self.created_by)
-
-        list_statuses = None
-        if self.list_slug == self.created_by.username:
-            list_statuses = api.GetUserTimeline(screen_name=self.created_by.username, include_rts=True, count=25)
-        elif self.list_slug and self.created_by.username:
-            list_statuses = api.GetListTimeline(None, self.list_slug, owner_screen_name=self.created_by.username, include_rts=False, count=25)
-        else:
-            print "Insufficient info for GetListTimeline: slug=%s, owner_screen_name=%s" % (self.list_slug, self.created_by.username)
-            return None
-
-        if not list_statuses or len(list_statuses) == 0:
-            print "No tweets returned for GetListTimeline: slug=%s, owner_screen_name=%s" % (self.list_slug, self.created_by.username)
-            return None
-            
+        
         if not self.collection_id or self.collection_id == 'new':
             print "No collection specified: %s" % (self.collection_id)
             return None
             
-        print "Processing list (slug=%s, owner_screen_name=%s) and collection (%s)" % (self.list_slug, self.created_by.username, self.collection_id)
+        list_statuses = None
+        if self.source_type == 'tweets_mine':
+            list_statuses = api.GetUserTimeline(screen_name=self.created_by.username, include_rts=True, count=25)
+        elif self.source_type == 'search':
+            list_statuses = api.GetSearch(term=self.search_term, count=25)
+        elif self.list_slug and self.created_by.username:
+            list_statuses = api.GetListTimeline(None, self.list_slug, owner_screen_name=self.created_by.username, include_rts=False, count=25)
+        else:
+            print "Insufficient parameters: source_type=%s, owner_screen_name=%s, slug=%s, search=%s" % (self.source_type, self.created_by.username, self.list_slug, self.search_term)
+            return None
+
+        if not list_statuses or len(list_statuses) == 0:
+            print "No tweets returned: source_type=%s, owner_screen_name=%s, slug=%s, search=%s" % (self.source_type, self.created_by.username, self.list_slug, self.search_term)
+            return None
+            
+        print "Processing list (source_type=%s, owner_screen_name=%s, slug=%s, search=%s) and collection (%s)" % (self.source_type, self.created_by.username, self.list_slug, self.search_term, self.collection_id)
 
         coll_tweet_ids = api.GetCollectionsEntries(self.collection_id, count=25)
         

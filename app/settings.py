@@ -134,12 +134,11 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # security: https://django-csp.readthedocs.org/en/latest/configuration.html#policy-settings
-CSP_DEFAULT_SRC = ("'self'",)
-CSP_IMG_SRC = ("'self'", 'https://www.google-analytics.com', )
-CSP_SCRIPT_SRC = ("'self'", 'https://www.google-analytics.com', 'https://ajax.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
-CSP_FRAME_SRC = ("'self'", )
-CSP_STYLE_SRC = ("'self'", 'https://fonts.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
-CSP_FONT_SRC = ("'self'", 'https://fonts.gstatic.com', 'https://maxcdn.bootstrapcdn.com', )
+CSP_DEFAULT_SRC = ("'self'", 'http://*.twitter.com', 'https://*.twitter.com', 'https://*.twimg.com', 'https://*.vine.co',)
+CSP_IMG_SRC = CSP_DEFAULT_SRC + ('data:', 'https://www.google-analytics.com', )
+CSP_SCRIPT_SRC = CSP_DEFAULT_SRC + ("'unsafe-inline'", 'https://www.google-analytics.com', 'https://ajax.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
+CSP_STYLE_SRC = CSP_DEFAULT_SRC + ("'unsafe-inline'", 'https://fonts.googleapis.com', 'https://maxcdn.bootstrapcdn.com', )
+CSP_FONT_SRC = CSP_DEFAULT_SRC + ('https://fonts.gstatic.com', 'https://maxcdn.bootstrapcdn.com', )
 CSP_OBJECT_SRC = ("'none'", )
 
 SOCIAL_AUTH_LOGIN_URL          = '/'
@@ -148,11 +147,11 @@ SOCIAL_AUTH_LOGIN_ERROR_URL    = '/login-error/'
 
 LOGIN_URL = '/login/twitter'
 
-OFFLINE = False
-
 # Get your Twitter key/secret from https://apps.twitter.com/
 SOCIAL_AUTH_TWITTER_KEY = environ.get('CONSUMER_KEY')               # Twitter API Consumer Key
 SOCIAL_AUTH_TWITTER_SECRET = environ.get('CONSUMER_SECRET')         # Twitter API Consumer Secret
 
 TWITTER_ACCESS_TOKEN = environ.get('ACCESS_TOKEN')                  # Twitter API Access Token
 TWITTER_ACCESS_TOKEN_SECRET = environ.get('ACCESS_TOKEN_SECRET')    # Twitter API Access Secret
+
+OFFLINE = False

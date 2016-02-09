@@ -21,6 +21,8 @@ SOURCE_TYPES = (
     ('list', 'List'),
 )
 
+MAX_TWEETS = 200
+
 class Collection(AuditedModel):
     
     name = models.CharField(max_length=100, null=False, blank=False)
@@ -55,11 +57,11 @@ class Collection(AuditedModel):
             
         list_statuses = None
         if self.source_type == 'tweets_mine':
-            list_statuses = api.GetUserTimeline(screen_name=self.created_by.username, include_rts=True, count=25)
+            list_statuses = api.GetUserTimeline(screen_name=self.created_by.username, include_rts=True, count=MAX_TWEETS)
         elif self.source_type == 'search':
-            list_statuses = api.GetSearch(term=self.search_term, count=25)
+            list_statuses = api.GetSearch(term=self.search_term, count=MAX_TWEETS)
         elif self.list_slug and self.created_by.username:
-            list_statuses = api.GetListTimeline(None, self.list_slug, owner_screen_name=self.created_by.username, include_rts=False, count=25)
+            list_statuses = api.GetListTimeline(None, self.list_slug, owner_screen_name=self.created_by.username, include_rts=False, count=MAX_TWEETS)
         else:
             print "Insufficient parameters: source_type=%s, owner_screen_name=%s, slug=%s, search=%s" % (self.source_type, self.created_by.username, self.list_slug, self.search_term)
             return None
@@ -70,7 +72,7 @@ class Collection(AuditedModel):
             
         print "Processing list (source_type=%s, owner_screen_name=%s, slug=%s, search=%s) and collection (%s)" % (self.source_type, self.created_by.username, self.list_slug, self.search_term, self.collection_id)
 
-        coll_tweet_ids = api.GetCollectionsEntries(self.collection_id, count=25)
+        coll_tweet_ids = api.GetCollectionsEntries(self.collection_id, count=MAX_TWEETS)
         
         # print "list tweet count: %s" % len(list_statuses)
         # print "collection tweet count: %s" % len(coll_tweet_ids)

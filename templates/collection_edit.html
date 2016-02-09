@@ -45,11 +45,11 @@
   			<option value="tweets_mine" {% if coll.source_type == "tweets_mine" %}SELECTED{% endif %}>My tweets</option>
   			<option value="search" {% if coll.source_type == "search" %}SELECTED{% endif %}>Search</option>
 	  		{% if settings.OFFLINE %}
-  			<option value="dpr-platform" SELECTED>offline - DPR Platform: DPR Platform (4)</option>
+  				<option value="dpr-platform" SELECTED>offline - DPR Platform: DPR Platform (4)</option>
   			{% endif %}
-	  	{% for l in lists %}
-  			<option value="{{ l.slug }}" {% if l.slug == coll.list_slug %}SELECTED{% endif %}>List: {{ l.name }}{% if l.description %}: {{ l.description }}{% endif %} {% if l.member_count %}({{l.member_count}}){% endif %}</option>
-  		{% endfor %}
+		  	{% for l in lists %}
+  				<option value="{{ l.slug }}" {% if coll.source_type == "list" and l.slug == coll.list_slug %}SELECTED{% endif %}>List: {{ l.name }}{% if l.description %}: {{ l.description }}{% endif %} {% if l.member_count %}({{l.member_count}}){% endif %}</option>
+  			{% endfor %}
   			<option value="new" >List: -- Create new --</option>
 
   	  	</select>

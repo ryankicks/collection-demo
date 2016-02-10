@@ -63,6 +63,18 @@ Getting Started
   
 - Open a browser and go to http://127.0.0.1:9000
 
+Invalidate Twitter tokens 
+--------
+
+For security, this code sample has a batch process to clear out Twitter auth tokens for users that either:
+
+- Have a login of greater than 30 days ago, or 
+- Have never logged in and joined greater than 30 days ago
+
+To run the process, simply execute:
+
+	`fab invalidate'
+
 Deploying to Heroku
 ============
 
@@ -97,7 +109,7 @@ Then query for your initial user and update their profile as follows:
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/ryankicks/collection-pipes)
 
 Running the pipeline on a Heroku Scheduler
-============
+--------
 
 You can run the processing of the pipeline in the background. To test your configuration, first set your 
 Heroku SETTINGS_FILE environment variable appropriately, and then run the following command:
@@ -113,7 +125,21 @@ If this runs properly, follow the below steps to run it as a scheduled job on He
 
 Confirm successful execution by viewing the output in the Heroku app logs.
 
-NOTES
+Invalidating Twitter tokens on Heroku
+--------
+
+To ensure the token invalidation script works properly on Heroku, run the following from your machine: 
+
+	`heroku run fab invalidate --app=MY_APP_NAME'
+	
+If this runs properly, follow the below steps to run it as a scheduled job on Heroku:
+
+- Run `heroku addons:add scheduler:standard --app=MY_APP_NAME`
+- Log into heroku.com, open your app and go to "Resources"
+- Click on "Heroku Scheduler" and then "Add a New Job"
+- Type in `fab invalidate`
+
+Notes
 ============
 If you receive a 401 at login/twitter it is most likely caused by a datetime discrepancy between the server making the requst and the Twitter server.
 
